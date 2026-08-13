@@ -1,91 +1,449 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Ashmin Notes</title>
-    <style>
-        body{
-            font-family: Arial;
-            background:yellow;
-            margin:0;
-            padding:20px;
-            text-align:center;
-        }
-        h1{
-            color:#2c3e50;
-        }
-        .search{
-            margin:20px;
-        }
-        input{
-            width:80%;
-            max-width:300px;
-            padding:10px;
-            border-radius:8px;
-            border:1px solid #ccc;
-        }
-      .grid{ 
-          display:grid;
-          grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
-          gap:15px;
-          max-width:800px;
-          margin:auto;
-      }
-        .box{
-            background:white;
-            padding:20px;
-            border-radius:12px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.1);
-            cursor:pointer;
-        }
-        .box:hover{
-            background:#eaf2ff;
-        }
-        .profile{ position:absolute; top:15px; right:15px; }
-        .profile img{  width:50px;
-                     height:50px;
-                     border-radius:50%;
-                     object-fit:cover;
-                     border:2px solid white;
-                     box-shadow:0 2px 6px rgba(0,0,0,0.2);
-                     cursor:pointer;
-                    }
-        .box-link{ text-decoration:none; color:inherit; }
-   @media (max-width:600px){
-       body{
-           padding:15px; } 
-       .box{
-           padding:18px; 
-            font-size:14px;
-           } 
-       h1{ 
-           font-size:32px;
-               }
-   } 
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My BITM Notes</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#111827;
+}
+
+/* Header */
+.header{
+    background:#ffffff;
+    padding:14px 22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:190px;
+}
+
+.logo-icon{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    background:#0b4db8;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+}
+
+.logo-text h1{
+    font-size:22px;
+    color:#0b4db8;
+    line-height:1;
+}
+
+.logo-text span{
+    font-size:14px;
+    color:#6b7280;
+}
+
+.search-box{
+    flex:1;
+    max-width:650px;
+    background:#f4f7fb;
+    border:1px solid #dbe3f0;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 18px;
+}
+
+.search-box span{
+    color:#6b7280;
+    font-size:18px;
+}
+
+.search-box input{
+    border:none;
+    outline:none;
+    background:transparent;
+    width:100%;
+    font-size:15px;
+}
+
+.actions{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.profile{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #e5e7eb;
+}
+
+.icon{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#f4f7fb;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:0.2s;
+    font-size:18px;
+}
+
+.icon:hover{
+    background:#e8f0fe;
+}
+
+/* Layout */
+.container{
+    display:flex;
+    min-height:calc(100vh - 80px);
+}
+
+/* Sidebar */
+.sidebar{
+    width:230px;
+    background:#ffffff;
+    padding:22px 18px;
+    box-shadow:2px 0 10px rgba(0,0,0,0.05);
+}
+
+.sidebar .menu{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.menu .item{
+    padding:13px 15px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.2s;
+    font-weight:500;
+}
+
+.menu .item.active{
+    background:#0b4db8;
+    color:white;
+}
+
+.menu .item:hover{
+    background:#e8f0fe;
+}
+
+.menu .item.active:hover{
+    background:#0a44a3;
+}
+
+/* Main */
+.main{
+    flex:1;
+    padding:26px;
+}
+
+.semester-section{
+    background:#0b4db8;
+    border-radius:22px;
+    padding:24px;
+    margin-bottom:28px;
+}
+
+.semester-section h2{
+    color:white;
+    margin-bottom:18px;
+    font-size:24px;
+}
+
+.semester-buttons{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:14px;
+}
+
+.semester-buttons button{
+    padding:13px 14px;
+    border:none;
+    border-radius:14px;
+    background:white;
+    color:#111827;
+    font-weight:700;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.semester-buttons button:hover{
+    background:#dbeafe;
+}
+
+.semester-buttons button.active{
+    background:#0b4db8;
+    color:white;
+    border:2px solid white;
+}
+
+.chapter-title{
+    font-size:24px;
+    color:#0b4db8;
+    margin-bottom:22px;
+    font-weight:700;
+}
+
+.chapter-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:20px;
+}
+
+.chapter-card{
+    background:white;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    border-left:6px solid #0b4db8;
+    transition:0.2s;
+}
+
+.chapter-card:hover{
+    transform:translateY(-3px);
+}
+
+.chapter-number{
+    font-size:14px;
+    font-weight:700;
+    color:#0b4db8;
+    margin-bottom:10px;
+}
+
+.chapter-name{
+    font-size:18px;
+    font-weight:700;
+    line-height:1.4;
+}
+
+/* Mobile */
+@media(max-width:900px){
+    .container{
+        flex-direction:column;
+    }
+
+    .sidebar{
+        width:100%;
+    }
+}
+
+@media(max-width:700px){
+    .header{
+        flex-wrap:wrap;
+        gap:14px;
+    }
+
+    .search-box{
+        order:3;
+        width:100%;
+        max-width:none;
+    }
+
+    .main{
+        padding:18px;
+    }
+
+    .semester-section{
+        padding:18px;
+    }
+}
+</style>
 </head>
+
 <body>
-    <div class="profile"> <a href="about.html"> <img src="profile.jpg" alt="Profile"> </a> </div>
 
-    <h1>Ashmin Notes</h1>
+<!-- Header -->
+<div class="header">
 
-    <div class="search">
-        <input type="text" placeholder="Search notes...">
+    <div class="logo">
+        <div class="logo-icon">📘</div>
+        <div class="logo-text">
+            <h1>My BITM</h1>
+            <span>Notes</span>
+        </div>
     </div>
 
-    <h2>BITM</h2>
-
-    <div class="grid">
-       <a href="semester1.html" class="box-link">
-           <div class="box">1st Semester</div> 
-       </a>
-        <div class="box">2nd Semester</div>
-        <div class="box">3rd Semester</div>
-        <div class="box">4th Semester</div>
-        <div class="box">5th Semester</div>
-        <div class="box">6th Semester</div>
-        <div class="box">7th Semester</div>
-        <div class="box">8th Semester</div>
+    <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Search for chapters, subjects, or keywords...">
     </div>
+
+    <div class="actions">
+        <img src="profile.jpg" class="profile" alt="Profile">
+        <div class="icon">🔔</div>
+        <div class="icon">⚙️</div>
+    </div>
+
+</div>
+
+<!-- Layout -->
+<div class="container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="menu">
+            <div class="item active">🏠 My BITM</div>
+            <div class="item">📊 Dashboard</div>
+            <div class="item">📚 Subjects</div>
+            <div class="item">📝 Notes Hub</div>
+            <div class="item">📂 Resources</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+
+        <div class="semester-section">
+            <h2>Select Semester</h2>
+
+            <div class="semester-buttons">
+                <button onclick="showSemester(1,this)">Semester 1</button>
+                <button onclick="showSemester(2,this)">Semester 2</button>
+                <button onclick="showSemester(3,this)">Semester 3</button>
+                <button onclick="showSemester(4,this)">Semester 4</button>
+                <button onclick="showSemester(5,this)">Semester 5</button>
+                <button onclick="showSemester(6,this)">Semester 6</button>
+                <button onclick="showSemester(7,this)">Semester 7</button>
+                <button onclick="showSemester(8,this)">Semester 8</button>
+            </div>
+        </div>
+
+        <div class="chapter-title" id="title">
+            Click a semester to view chapters
+        </div>
+
+        <div class="chapter-grid" id="chapters"></div>
+
+    </div>
+
+</div>
+
+<script>
+const semesters = {
+    1:[
+        "Introduction to C",
+        "Data Types and Variables",
+        "Operators and Expressions",
+        "Control Statements",
+        "Functions",
+        "Arrays"
+    ],
+    2:[
+        "Java Basics",
+        "Classes and Objects",
+        "Inheritance",
+        "Polymorphism",
+        "Exception Handling",
+        "Collections"
+    ],
+    3:[
+        "DBMS Overview",
+        "ER Model",
+        "Normalization",
+        "SQL Basics",
+        "Joins",
+        "Transactions"
+    ],
+    4:[
+        "Computer Networks",
+        "IP Addressing",
+        "Routing",
+        "Transport Layer",
+        "Application Layer",
+        "Network Security"
+    ],
+    5:[
+        "Operating System Basics",
+        "Process Management",
+        "Threads",
+        "Memory Management",
+        "File System",
+        "Deadlocks"
+    ],
+    6:[
+        "Software Engineering",
+        "Requirement Analysis",
+        "System Design",
+        "Testing",
+        "Maintenance",
+        "Agile Methods"
+    ],
+    7:[
+        "Web Technology",
+        "HTML and CSS",
+        "JavaScript",
+        "Backend Basics",
+        "Database Connection",
+        "Deployment"
+    ],
+    8:[
+        "Project Planning",
+        "Research Methods",
+        "Implementation",
+        "Testing and Validation",
+        "Documentation",
+        "Presentation"
+    ]
+};
+
+function showSemester(sem,btn){
+
+    document.querySelectorAll('.semester-buttons button')
+    .forEach(b=>b.classList.remove('active'));
+
+    btn.classList.add('active');
+
+    document.getElementById('title').innerText =
+        `Semester ${sem} Chapters`;
+
+    const container = document.getElementById('chapters');
+
+    container.innerHTML = '';
+
+    semesters[sem].forEach((chapter,index)=>{
+
+        container.innerHTML += `
+            <div class="chapter-card">
+                <div class="chapter-number">
+                    Chapter ${index+1}
+                </div>
+
+                <div class="chapter-name">
+                    ${chapter}
+                </div>
+            </div>
+        `;
+    });
+}
+</script>
 
 </body>
 </html>
