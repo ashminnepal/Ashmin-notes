@@ -225,10 +225,12 @@ body{
     box-shadow:0 6px 18px rgba(0,0,0,0.08);
     border-left:6px solid #0b4db8;
     transition:0.2s;
+    cursor:pointer;
 }
 
 .chapter-card:hover{
     transform:translateY(-3px);
+    background:#f8fbff;
 }
 
 .chapter-number{
@@ -285,6 +287,7 @@ body{
 
     <div class="logo">
         <div class="logo-icon">📘</div>
+
         <div class="logo-text">
             <h1>My BITM</h1>
             <span>Notes</span>
@@ -297,11 +300,14 @@ body{
     </div>
 
     <div class="actions">
-       <a href="profile.html">
-    <img src="profile.jpg" class="profile" alt="Profile">
-</a>
+
+        <a href="profile.html">
+            <img src="profile.jpg" class="profile" alt="Profile">
+        </a>
+
         <div class="icon">🔔</div>
         <div class="icon">⚙️</div>
+
     </div>
 
 </div>
@@ -311,22 +317,28 @@ body{
 
     <!-- Sidebar -->
     <div class="sidebar">
+
         <div class="menu">
+
             <div class="item active">🏠 My BITM</div>
             <div class="item">📊 Dashboard</div>
             <div class="item">📚 Subjects</div>
             <div class="item">📝 Notes Hub</div>
             <div class="item">📂 Resources</div>
+
         </div>
+
     </div>
 
     <!-- Main Content -->
     <div class="main">
 
         <div class="semester-section">
+
             <h2>Select Semester</h2>
 
             <div class="semester-buttons">
+
                 <button onclick="showSemester(1,this)">Semester 1</button>
                 <button onclick="showSemester(2,this)">Semester 2</button>
                 <button onclick="showSemester(3,this)">Semester 3</button>
@@ -335,7 +347,9 @@ body{
                 <button onclick="showSemester(6,this)">Semester 6</button>
                 <button onclick="showSemester(7,this)">Semester 7</button>
                 <button onclick="showSemester(8,this)">Semester 8</button>
+
             </div>
+
         </div>
 
         <div class="chapter-title" id="title">
@@ -349,7 +363,9 @@ body{
 </div>
 
 <script>
+
 const semesters = {
+
     1:[
         "Foundation of Information Technology",
         "C Programming",
@@ -358,6 +374,7 @@ const semesters = {
         "Basic Mathematics",
         "Assignment"
     ],
+
     2:[
         "Digital Logic",
         "Java Programming",
@@ -366,6 +383,7 @@ const semesters = {
         "OBHRM",
         "Assignment"
     ],
+
     3:[
         "Microprocessor And Computer Architecture",
         "Web Technology 1",
@@ -374,6 +392,7 @@ const semesters = {
         "Business Statistics",
         "Assignment"
     ],
+
     4:[
         "Web Technology",
         "Database Management System",
@@ -382,6 +401,7 @@ const semesters = {
         "Economics For Business",
         "Cost And Management Accounting"
     ],
+
     5:[
         "Software Design And Development",
         "Programming With Python",
@@ -390,14 +410,16 @@ const semesters = {
         "Artificial Intelligence",
         "Assignment"
     ],
+
     6:[
         "Business Information System",
         "IT Ethics And Cybersecurity",
         "Fundamentals of Corporate Finance",
         "Business Environment",
-        "Business Research Method ",
+        "Business Research Method",
         "Assignment"
     ],
+
     7:[
         "E-commerce And Internet Marketing",
         "Sociology For Business Management",
@@ -406,6 +428,7 @@ const semesters = {
         "Internship",
         "Project/Assignment"
     ],
+
     8:[
         "IT Entrepreneurship And Management",
         "Business Intelligence",
@@ -414,7 +437,9 @@ const semesters = {
         "Project",
         "Project"
     ]
+
 };
+
 
 function showSemester(sem,btn){
 
@@ -424,27 +449,65 @@ function showSemester(sem,btn){
     btn.classList.add('active');
 
     document.getElementById('title').innerText =
-        `Semester ${sem} Chapters`;
+        `Semester ${sem} Subjects`;
 
     const container = document.getElementById('chapters');
 
     container.innerHTML = '';
 
-    semesters[sem].forEach((chapter,index)=>{
+    semesters[sem].forEach((subject,index)=>{
 
         container.innerHTML += `
-            <div class="chapter-card">
+
+            <div class="chapter-card"
+                 onclick="openSubject(${sem},${index})">
+
                 <div class="chapter-number">
                     Subject ${index+1}
                 </div>
 
                 <div class="chapter-name">
-                    ${chapter}
+                    ${subject}
                 </div>
+
             </div>
+
         `;
+
     });
+
 }
+
+
+/* Open subject pages */
+
+function openSubject(sem,index){
+
+    const pages = {
+
+        "1-0":"foundation-it.html",
+        "1-1":"c-programming.html",
+        "1-2":"english-1.html",
+        "1-3":"business-management.html",
+        "1-4":"basic-mathematics.html",
+        "1-5":"assignment.html"
+
+    };
+
+    const page = pages[`${sem}-${index}`];
+
+    if(page){
+
+        window.location.href = page;
+
+    }else{
+
+        alert("This subject page has not been created yet.");
+
+    }
+
+}
+
 </script>
 
 </body>
