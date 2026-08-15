@@ -16,6 +16,7 @@
 body{
     background:#f4f7fb;
     color:#111827;
+    transition:0.3s;
 }
 
 /* Header */
@@ -30,6 +31,7 @@ body{
     position:sticky;
     top:0;
     z-index:100;
+    transition:0.3s;
 }
 
 .logo{
@@ -72,6 +74,7 @@ body{
     align-items:center;
     gap:12px;
     padding:12px 18px;
+    transition:0.3s;
 }
 
 .search-box span{
@@ -85,6 +88,7 @@ body{
     background:transparent;
     width:100%;
     font-size:15px;
+    color:#111827;
 }
 
 .actions{
@@ -130,6 +134,7 @@ body{
     background:#ffffff;
     padding:22px 18px;
     box-shadow:2px 0 10px rgba(0,0,0,0.05);
+    transition:0.3s;
 }
 
 .sidebar .menu{
@@ -246,6 +251,93 @@ body{
     line-height:1.4;
 }
 
+/* ========================= */
+/* DARK MODE */
+/* ========================= */
+
+body.dark-mode{
+    background:#111827;
+    color:#f9fafb;
+}
+
+body.dark-mode .header{
+    background:#1f2937;
+    box-shadow:0 2px 12px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .logo-text h1{
+    color:#60a5fa;
+}
+
+body.dark-mode .logo-text span{
+    color:#9ca3af;
+}
+
+body.dark-mode .search-box{
+    background:#374151;
+    border-color:#4b5563;
+}
+
+body.dark-mode .search-box input{
+    color:white;
+}
+
+body.dark-mode .search-box input::placeholder{
+    color:#9ca3af;
+}
+
+body.dark-mode .search-box span{
+    color:#d1d5db;
+}
+
+body.dark-mode .icon{
+    background:#374151;
+}
+
+body.dark-mode .icon:hover{
+    background:#4b5563;
+}
+
+body.dark-mode .sidebar{
+    background:#1f2937;
+    box-shadow:2px 0 10px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .menu .item{
+    color:#f9fafb;
+}
+
+body.dark-mode .menu .item:hover{
+    background:#374151;
+}
+
+body.dark-mode .menu .item.active{
+    background:#0b4db8;
+    color:white;
+}
+
+body.dark-mode .chapter-title{
+    color:#60a5fa;
+}
+
+body.dark-mode .chapter-card{
+    background:#1f2937;
+    color:#f9fafb;
+    box-shadow:0 6px 18px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .chapter-card:hover{
+    background:#273449;
+}
+
+body.dark-mode .chapter-number{
+    color:#60a5fa;
+}
+
+body.dark-mode .chapter-name{
+    color:#f9fafb;
+}
+
 /* Mobile */
 @media(max-width:900px){
     .container{
@@ -306,6 +398,12 @@ body{
         </a>
 
         <div class="icon">🔔</div>
+
+        <!-- Dark Mode Button -->
+        <div class="icon" onclick="toggleDarkMode()" id="darkButton">
+            🌙
+        </div>
+
         <div class="icon">⚙️</div>
 
     </div>
@@ -487,6 +585,28 @@ function openSubject(sem,index){
 
     window.location.href =
         `subject.html?semester=${sem}&subject=${index}`;
+
+}
+
+
+/* Dark Mode */
+
+function toggleDarkMode(){
+
+    document.body.classList.toggle("dark-mode");
+
+    const button =
+        document.getElementById("darkButton");
+
+    if(document.body.classList.contains("dark-mode")){
+
+        button.innerText = "☀️";
+
+    }else{
+
+        button.innerText = "🌙";
+
+    }
 
 }
 
