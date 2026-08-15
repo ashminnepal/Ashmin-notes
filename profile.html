@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile - My BITM Notes</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#111827;
+}
+
+/* Header */
+.header{
+    background:#F7FBFF;
+    padding:14px 22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-icon{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    background:#0b4db8;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+}
+
+.logo-text h1{
+    font-size:22px;
+    color:#0b4db8;
+    line-height:1;
+}
+
+.logo-text span{
+    font-size:14px;
+    color:#6b7280;
+}
+
+/* Back button */
+.back-button{
+    text-decoration:none;
+    background:#0b4db8;
+    color:white;
+    padding:10px 18px;
+    border-radius:10px;
+    font-weight:600;
+    transition:0.2s;
+}
+
+.back-button:hover{
+    background:#0a44a3;
+}
+
+/* Profile section */
+.profile-container{
+    max-width:800px;
+    margin:40px auto;
+    padding:0 20px;
+}
+
+.profile-card{
+    background:white;
+    border-radius:22px;
+    padding:35px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.08);
+    text-align:center;
+}
+
+/* Profile photo */
+.profile-photo{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid #e8f0fe;
+    margin-bottom:18px;
+}
+
+/* Name */
+.profile-name{
+    color:#0b4db8;
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+.profile-title{
+    color:#6b7280;
+    font-size:15px;
+    margin-bottom:30px;
+}
+
+/* Details */
+.details{
+    text-align:left;
+    border-top:1px solid #e5e7eb;
+    padding-top:25px;
+}
+
+.detail{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    padding:15px 5px;
+    border-bottom:1px solid #eef1f5;
+}
+
+.detail-label{
+    font-weight:700;
+    color:#374151;
+}
+
+.detail-value{
+    color:#6b7280;
+    text-align:right;
+}
+
+/* About */
+.about{
+    margin-top:25px;
+    padding:20px;
+    background:#f4f7fb;
+    border-radius:15px;
+    text-align:left;
+}
+
+.about h2{
+    color:#0b4db8;
+    margin-bottom:10px;
+    font-size:20px;
+}
+
+.about p{
+    color:#6b7280;
+    line-height:1.6;
+}
+
+/* Mobile */
+@media(max-width:600px){
+
+    .header{
+        padding:12px 15px;
+    }
+
+    .logo-text h1{
+        font-size:19px;
+    }
+
+    .profile-card{
+        padding:25px 18px;
+    }
+
+    .profile-photo{
+        width:130px;
+        height:130px;
+    }
+
+    .profile-name{
+        font-size:24px;
+    }
+
+    .detail{
+        flex-direction:column;
+        gap:5px;
+    }
+
+    .detail-value{
+        text-align:left;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Header -->
+<div class="header">
+
+    <div class="logo">
+        <div class="logo-icon">📘</div>
+
+        <div class="logo-text">
+            <h1>My BITM</h1>
+            <span>Notes</span>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-button">
+        ← Back
+    </a>
+
+</div>
+
+
+<!-- Profile -->
+<div class="profile-container">
+
+    <div class="profile-card">
+
+        <!-- Profile Photo -->
+        <img src="profile.jpg" class="profile-photo" alt="Ashmin Nepal">
+
+        <!-- Name -->
+        <h1 class="profile-name">
+            Ashmin Nepal
+        </h1>
+
+        <p class="profile-title">
+            BITM Student
+        </p>
+
+
+        <!-- Details -->
+        <div class="details">
+
+            <div class="detail">
+                <span class="detail-label">College</span>
+                <span class="detail-value">Universal College</span>
+            </div>
+
+            <div class="detail">
+                <span class="detail-label">Program</span>
+                <span class="detail-value">Bachelor of Information Technology Management</span>
+            </div>
+
+            <div class="detail">
+                <span class="detail-label">Faculty</span>
+                <span class="detail-value">BITM</span>
+            </div>
+
+            <div class="detail">
+                <span class="detail-label">Semester</span>
+                <span class="detail-value">Semester 1</span>
+            </div>
+
+            <div class="detail">
+                <span class="detail-label">Website</span>
+                <span class="detail-value">My BITM Notes</span>
+            </div>
+
+        </div>
+
+
+        <!-- About -->
+        <div class="about">
+
+            <h2>About Me</h2>
+
+            <p>
+                Hello! I am Ashmin Nepal, a BITM student.
+                This website is created to organize my study notes,
+                subjects, resources, and academic materials in one place.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
