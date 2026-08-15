@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Subject - My BITM Notes</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    color:#111827;
+}
+
+
+/* HEADER */
+
+.header{
+    background:#F7FBFF;
+    padding:14px 22px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:190px;
+}
+
+
+.logo-icon{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    background:#0b4db8;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+}
+
+
+.logo-text h1{
+    font-size:22px;
+    color:#0b4db8;
+    line-height:1;
+}
+
+
+.logo-text span{
+    font-size:14px;
+    color:#6b7280;
+}
+
+
+/* SEARCH */
+
+.search-box{
+    flex:1;
+    max-width:650px;
+    background:#f4f7fb;
+    border:1px solid #dbe3f0;
+    border-radius:999px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 18px;
+}
+
+
+.search-box span{
+    color:#6b7280;
+    font-size:18px;
+}
+
+
+.search-box input{
+    border:none;
+    outline:none;
+    background:transparent;
+    width:100%;
+    font-size:15px;
+}
+
+
+/* ACTIONS */
+
+.actions{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+
+.profile{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #e5e7eb;
+}
+
+
+.icon{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#f4f7fb;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+}
+
+
+/* MAIN */
+
+.main{
+    max-width:1100px;
+    margin:auto;
+    padding:30px;
+}
+
+
+/* SUBJECT HEADER */
+
+.subject-header{
+    background:#0b4db8;
+    color:white;
+    padding:28px;
+    border-radius:22px;
+    margin-bottom:28px;
+}
+
+
+.subject-header h1{
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+
+.subject-header p{
+    opacity:0.9;
+}
+
+
+/* BACK BUTTON */
+
+.back-button{
+    display:inline-block;
+    margin-top:20px;
+    background:white;
+    color:#0b4db8;
+    text-decoration:none;
+    padding:10px 18px;
+    border-radius:10px;
+    font-weight:700;
+}
+
+
+.back-button:hover{
+    background:#dbeafe;
+}
+
+
+/* CHAPTER TITLE */
+
+.chapter-title{
+    font-size:24px;
+    color:#0b4db8;
+    margin-bottom:20px;
+    font-weight:700;
+}
+
+
+/* CHAPTER GRID */
+
+.chapter-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:20px;
+}
+
+
+/* CHAPTER CARD */
+
+.chapter-card{
+    background:white;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    border-left:6px solid #0b4db8;
+    transition:0.2s;
+}
+
+
+.chapter-card:hover{
+    transform:translateY(-3px);
+}
+
+
+.chapter-number{
+    font-size:14px;
+    font-weight:700;
+    color:#0b4db8;
+    margin-bottom:8px;
+}
+
+
+.chapter-name{
+    font-size:19px;
+    font-weight:700;
+    margin-bottom:18px;
+}
+
+
+/* PDF BUTTON */
+
+.pdf-button{
+    display:inline-block;
+    padding:10px 16px;
+    background:#0b4db8;
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+}
+
+
+.pdf-button:hover{
+    background:#0a44a3;
+}
+
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+    .header{
+        flex-wrap:wrap;
+    }
+
+    .search-box{
+        order:3;
+        width:100%;
+        max-width:none;
+    }
+
+    .main{
+        padding:18px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            📘
+        </div>
+
+        <div class="logo-text">
+
+            <h1>My BITM</h1>
+
+            <span>Notes</span>
+
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <span>🔍</span>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search for chapters, notes, or keywords..."
+        >
+
+    </div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="actions">
+
+        <a href="profile.html">
+
+            <img
+                src="profile.jpg"
+                class="profile"
+                alt="Profile"
+            >
+
+        </a>
+
+        <div class="icon">🔔</div>
+
+        <div class="icon">⚙️</div>
+
+    </div>
+
+</div>
+
+
+
+<!-- MAIN -->
+
+<div class="main">
+
+
+    <!-- SUBJECT -->
+
+    <div class="subject-header">
+
+        <h1>C Programming</h1>
+
+        <p>Semester 1 • BITM</p>
+
+        <a
+            href="index.html"
+            class="back-button"
+        >
+            ← Back to Subjects
+        </a>
+
+    </div>
+
+
+
+    <div class="chapter-title">
+        Chapters
+    </div>
+
+
+
+    <!-- CHAPTERS -->
+
+    <div class="chapter-grid" id="chapterGrid">
+
+
+        <div class="chapter-card">
+
+            <div class="chapter-number">
+                Chapter 1
+            </div>
+
+            <div class="chapter-name">
+                Introduction to C Programming
+            </div>
+
+            <a
+                href="pdf/c-chapter-1.pdf"
+                target="_blank"
+                class="pdf-button"
+            >
+                📄 View PDF
+            </a>
+
+        </div>
+
+
+
+        <div class="chapter-card">
+
+            <div class="chapter-number">
+                Chapter 2
+            </div>
+
+            <div class="chapter-name">
+                Variables and Data Types
+            </div>
+
+            <a
+                href="pdf/c-chapter-2.pdf"
+                target="_blank"
+                class="pdf-button"
+            >
+                📄 View PDF
+            </a>
+
+        </div>
+
+
+
+        <div class="chapter-card">
+
+            <div class="chapter-number">
+                Chapter 3
+            </div>
+
+            <div class="chapter-name">
+                Operators and Expressions
+            </div>
+
+            <a
+                href="pdf/c-chapter-3.pdf"
+                target="_blank"
+                class="pdf-button"
+            >
+                📄 View PDF
+            </a>
+
+        </div>
+
+
+
+        <div class="chapter-card">
+
+            <div class="chapter-number">
+                Chapter 4
+            </div>
+
+            <div class="chapter-name">
+                Control Statements
+            </div>
+
+            <a
+                href="pdf/c-chapter-4.pdf"
+                target="_blank"
+                class="pdf-button"
+            >
+                📄 View PDF
+            </a>
+
+        </div>
+
+
+
+        <div class="chapter-card">
+
+            <div class="chapter-number">
+                Chapter 5
+            </div>
+
+            <div class="chapter-name">
+                Functions
+            </div>
+
+            <a
+                href="pdf/c-chapter-5.pdf"
+                target="_blank"
+                class="pdf-button"
+            >
+                📄 View PDF
+            </a>
+
+        </div>
+
+
+
+        <div class="chapter-card">
+
+            <div class="chapter-number">
+                Chapter 6
+            </div>
+
+            <div class="chapter-name">
+                Arrays and Strings
+            </div>
+
+            <a
+                href="pdf/c-chapter-6.pdf"
+                target="_blank"
+                class="pdf-button"
+            >
+                📄 View PDF
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- SEARCH FUNCTION -->
+
+<script>
+
+const searchInput = document.getElementById("searchInput");
+
+const cards = document.querySelectorAll(".chapter-card");
+
+
+searchInput.addEventListener("input", function(){
+
+    const searchText =
+        this.value.toLowerCase();
+
+
+    cards.forEach(function(card){
+
+        const text =
+            card.innerText.toLowerCase();
+
+
+        if(text.includes(searchText)){
+
+            card.style.display = "";
+
+        }else{
+
+            card.style.display = "none";
+
+        }
+
+    });
+
+});
+
+</script>
+
+
+</body>
+</html>
