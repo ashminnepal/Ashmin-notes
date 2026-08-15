@@ -6,6 +6,7 @@
 <title>My BITM Notes</title>
 
 <style>
+
 *{
     margin:0;
     padding:0;
@@ -20,6 +21,7 @@ body{
 }
 
 /* Header */
+
 .header{
     background:#F7FBFF;
     padding:14px 22px;
@@ -122,13 +124,17 @@ body{
     background:#e8f0fe;
 }
 
+
 /* Layout */
+
 .container{
     display:flex;
     min-height:calc(100vh - 80px);
 }
 
+
 /* Sidebar */
+
 .sidebar{
     width:230px;
     background:#ffffff;
@@ -164,7 +170,9 @@ body{
     background:#0a44a3;
 }
 
+
 /* Main */
+
 .main{
     flex:1;
     padding:26px;
@@ -251,6 +259,7 @@ body{
     line-height:1.4;
 }
 
+
 /* ========================= */
 /* DARK MODE */
 /* ========================= */
@@ -298,6 +307,10 @@ body.dark-mode .icon:hover{
     background:#4b5563;
 }
 
+body.dark-mode .profile{
+    border-color:#4b5563;
+}
+
 body.dark-mode .sidebar{
     background:#1f2937;
     box-shadow:2px 0 10px rgba(0,0,0,0.3);
@@ -338,8 +351,11 @@ body.dark-mode .chapter-name{
     color:#f9fafb;
 }
 
+
 /* Mobile */
+
 @media(max-width:900px){
+
     .container{
         flex-direction:column;
     }
@@ -347,9 +363,11 @@ body.dark-mode .chapter-name{
     .sidebar{
         width:100%;
     }
+
 }
 
 @media(max-width:700px){
+
     .header{
         flex-wrap:wrap;
         gap:14px;
@@ -368,99 +386,213 @@ body.dark-mode .chapter-name{
     .semester-section{
         padding:18px;
     }
+
 }
+
 </style>
+
+
+<!-- CHECK SAVED DARK MODE BEFORE PAGE LOAD -->
+
+<script>
+
+if(localStorage.getItem("darkMode") === "enabled"){
+    document.documentElement.classList.add("dark-mode-ready");
+}
+
+</script>
+
 </head>
+
 
 <body>
 
+
 <!-- Header -->
+
 <div class="header">
 
     <div class="logo">
-        <div class="logo-icon">📘</div>
+
+        <div class="logo-icon">
+            📘
+        </div>
 
         <div class="logo-text">
+
             <h1>My BITM</h1>
+
             <span>Notes</span>
+
         </div>
+
     </div>
 
+
     <div class="search-box">
+
         <span>🔍</span>
-        <input type="text" placeholder="Search for chapters, subjects, or keywords...">
+
+        <input
+            type="text"
+            placeholder="Search for chapters, subjects, or keywords..."
+        >
+
     </div>
+
 
     <div class="actions">
 
         <a href="profile.html">
-            <img src="profile.jpg" class="profile" alt="Profile">
+
+            <img
+                src="profile.jpg"
+                class="profile"
+                alt="Profile"
+            >
+
         </a>
 
-        <div class="icon">🔔</div>
 
-        <!-- Dark Mode Button -->
-        <div class="icon" onclick="toggleDarkMode()" id="darkButton">
+        <div class="icon">
+            🔔
+        </div>
+
+
+        <!-- Dark Mode -->
+
+        <div
+            class="icon"
+            onclick="toggleDarkMode()"
+            id="darkButton"
+            title="Dark Mode"
+        >
             🌙
         </div>
 
-        <div class="icon">⚙️</div>
+
+        <div class="icon">
+            ⚙️
+        </div>
 
     </div>
 
 </div>
 
+
+
 <!-- Layout -->
+
 <div class="container">
 
+
     <!-- Sidebar -->
+
     <div class="sidebar">
 
         <div class="menu">
 
-            <div class="item active">🏠 My BITM</div>
-            <div class="item">📊 Dashboard</div>
-            <div class="item">📚 Subjects</div>
-            <div class="item">📝 Notes Hub</div>
-            <div class="item">📂 Resources</div>
+            <div class="item active">
+                🏠 My BITM
+            </div>
+
+            <div class="item">
+                📊 Dashboard
+            </div>
+
+            <div class="item">
+                📚 Subjects
+            </div>
+
+            <div class="item">
+                📝 Notes Hub
+            </div>
+
+            <div class="item">
+                📂 Resources
+            </div>
 
         </div>
 
     </div>
 
+
+
     <!-- Main Content -->
+
     <div class="main">
+
 
         <div class="semester-section">
 
-            <h2>Select Semester</h2>
+            <h2>
+                Select Semester
+            </h2>
+
 
             <div class="semester-buttons">
 
-                <button onclick="showSemester(1,this)">Semester 1</button>
-                <button onclick="showSemester(2,this)">Semester 2</button>
-                <button onclick="showSemester(3,this)">Semester 3</button>
-                <button onclick="showSemester(4,this)">Semester 4</button>
-                <button onclick="showSemester(5,this)">Semester 5</button>
-                <button onclick="showSemester(6,this)">Semester 6</button>
-                <button onclick="showSemester(7,this)">Semester 7</button>
-                <button onclick="showSemester(8,this)">Semester 8</button>
+                <button onclick="showSemester(1,this)">
+                    Semester 1
+                </button>
+
+                <button onclick="showSemester(2,this)">
+                    Semester 2
+                </button>
+
+                <button onclick="showSemester(3,this)">
+                    Semester 3
+                </button>
+
+                <button onclick="showSemester(4,this)">
+                    Semester 4
+                </button>
+
+                <button onclick="showSemester(5,this)">
+                    Semester 5
+                </button>
+
+                <button onclick="showSemester(6,this)">
+                    Semester 6
+                </button>
+
+                <button onclick="showSemester(7,this)">
+                    Semester 7
+                </button>
+
+                <button onclick="showSemester(8,this)">
+                    Semester 8
+                </button>
 
             </div>
 
         </div>
 
-        <div class="chapter-title" id="title">
+
+        <div
+            class="chapter-title"
+            id="title"
+        >
             Click a semester to view chapters
         </div>
 
-        <div class="chapter-grid" id="chapters"></div>
+
+        <div
+            class="chapter-grid"
+            id="chapters"
+        ></div>
+
 
     </div>
 
 </div>
 
+
+
 <script>
+
+
+/* ================= SUBJECTS ================= */
 
 const semesters = {
 
@@ -539,33 +671,48 @@ const semesters = {
 };
 
 
+
+/* ================= SHOW SEMESTER ================= */
+
 function showSemester(sem,btn){
 
-    document.querySelectorAll('.semester-buttons button')
+    document
+    .querySelectorAll('.semester-buttons button')
     .forEach(b=>b.classList.remove('active'));
 
     btn.classList.add('active');
 
+
     document.getElementById('title').innerText =
         `Semester ${sem} Subjects`;
 
-    const container = document.getElementById('chapters');
+
+    const container =
+        document.getElementById('chapters');
 
     container.innerHTML = '';
+
 
     semesters[sem].forEach((subject,index)=>{
 
         container.innerHTML += `
 
-            <div class="chapter-card"
-                 onclick="openSubject(${sem},${index})">
+            <div
+                class="chapter-card"
+                onclick="openSubject(${sem},${index})"
+            >
 
                 <div class="chapter-number">
+
                     Subject ${index+1}
+
                 </div>
 
+
                 <div class="chapter-name">
+
                     ${subject}
+
                 </div>
 
             </div>
@@ -577,11 +724,10 @@ function showSemester(sem,btn){
 }
 
 
-/* Open subject pages */
+
+/* ================= OPEN SUBJECT ================= */
 
 function openSubject(sem,index){
-
-    const subject = semesters[sem][index];
 
     window.location.href =
         `subject.html?semester=${sem}&subject=${index}`;
@@ -589,20 +735,41 @@ function openSubject(sem,index){
 }
 
 
-/* Dark Mode */
+
+/* ================= DARK MODE ================= */
 
 function toggleDarkMode(){
 
     document.body.classList.toggle("dark-mode");
 
+
     const button =
         document.getElementById("darkButton");
 
-    if(document.body.classList.contains("dark-mode")){
+
+    if(
+        document.body.classList.contains("dark-mode")
+    ){
+
+        /* SAVE DARK MODE */
+
+        localStorage.setItem(
+            "darkMode",
+            "enabled"
+        );
 
         button.innerText = "☀️";
 
-    }else{
+    }
+
+    else{
+
+        /* SAVE LIGHT MODE */
+
+        localStorage.setItem(
+            "darkMode",
+            "disabled"
+        );
 
         button.innerText = "🌙";
 
@@ -610,7 +777,37 @@ function toggleDarkMode(){
 
 }
 
+
+
+/* ================= LOAD SAVED MODE ================= */
+
+window.addEventListener("DOMContentLoaded",function(){
+
+    const button =
+        document.getElementById("darkButton");
+
+
+    if(
+        localStorage.getItem("darkMode")
+        === "enabled"
+    ){
+
+        document.body.classList.add("dark-mode");
+
+        button.innerText = "☀️";
+
+    }
+
+    else{
+
+        button.innerText = "🌙";
+
+    }
+
+});
+
 </script>
+
 
 </body>
 </html>
