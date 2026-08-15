@@ -483,23 +483,10 @@ function showSemester(sem,btn){
 
 function openSubject(sem,index){
 
-    const pages = {
+    const subject = semesters[sem][index];
 
-        "1-1":"subject.html"
-
-    };
-
-    const page = pages[`${sem}-${index}`];
-
-    if(page){
-
-        window.location.href = page;
-
-    }else{
-
-        alert("This subject page has not been created yet.");
-
-    }
+    window.location.href =
+        `subject.html?semester=${sem}&subject=${index}`;
 
 }
 
