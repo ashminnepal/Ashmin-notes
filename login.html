@@ -1,1 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My BITM Notes - Login</title>
+</head>
 
+<body>
+
+<h1>My BITM Notes</h1>
+
+<input type="email" id="email" placeholder="Email">
+<br><br>
+
+<input type="password" id="password" placeholder="Password">
+<br><br>
+
+<button id="loginButton">Login</button>
+
+<p id="message"></p>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53rUofsTN2M",
+    authDomain: "my-bitm-notes.firebaseapp.com",
+    projectId: "my-bitm-notes",
+    storageBucket: "my-bitm-notes.firebasestorage.app",
+    messagingSenderId: "806626631556",
+    appId: "1:806626631556:web:3e1ff6d9474580fc5e47d1",
+    measurementId: "G-RYR93GQ15R"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+document.getElementById("loginButton").addEventListener("click", async function(){
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+
+        await signInWithEmailAndPassword(auth, email, password);
+
+        window.location.href = "index.html";
+
+    } catch (error) {
+
+        document.getElementById("message").innerText =
+        "Invalid email or password.";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
