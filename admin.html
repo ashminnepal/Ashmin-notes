@@ -7,9 +7,7 @@
   <title>My BITM Notes - Admin</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -33,10 +31,7 @@
       box-shadow: 0 3px 15px #00000010;
     }
 
-    h1, h2 {
-      color: #0b4db8;
-      margin-top: 0;
-    }
+    h1, h2 { color: #0b4db8; margin-top: 0; }
 
     input, select, button {
       width: 100%;
@@ -60,18 +55,10 @@
       font-weight: bold;
     }
 
-    button:hover {
-      opacity: 0.9;
-    }
+    button:hover { opacity: 0.9; }
 
-    .secondary {
-      background: #e8f0ff;
-      color: #0b4db8;
-    }
-
-    .danger {
-      background: #b91c1c;
-    }
+    .secondary { background: #e8f0ff; color: #0b4db8; }
+    .danger { background: #b91c1c; }
 
     .password-box {
       display: flex;
@@ -79,19 +66,9 @@
       align-items: center;
     }
 
-    .password-box input {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .password-box button {
-      width: auto;
-      min-width: 85px;
-    }
-
-    .hidden {
-      display: none;
-    }
+    .password-box input { min-width: 0; flex: 1; }
+    .password-box button { width: auto; min-width: 85px; }
+    .hidden { display: none; }
 
     .note {
       padding: 14px 0;
@@ -99,9 +76,7 @@
       overflow-wrap: anywhere;
     }
 
-    .note a {
-      color: #0b4db8;
-    }
+    .note a { color: #0b4db8; }
 
     #message {
       white-space: pre-wrap;
@@ -126,7 +101,6 @@
       <div id="message" role="status"></div>
     </div>
 
-    <!-- LOGIN -->
     <section id="loginSection" class="card">
       <h2>Admin Login</h2>
 
@@ -150,11 +124,10 @@
               class="secondary">Forgot Password?</button>
 
       <p class="small">
-        Password reset instructions will be sent to your email address.
+        Enter your email address above before requesting a password reset.
       </p>
     </section>
 
-    <!-- DASHBOARD -->
     <section id="dashboard" class="hidden">
 
       <div class="card">
@@ -207,9 +180,9 @@
         </form>
 
         <p class="small">
-          Upload the PDF to Google Drive first. Set its sharing to
-          anyone with the link can view, then paste the link above.
-          This form saves the link, not the PDF file itself.
+          Upload your PDF to Google Drive, set sharing to
+          anyone with the link can view, and paste the link here.
+          This form stores the link, not the PDF file itself.
         </p>
       </div>
 
@@ -218,7 +191,7 @@
         <button id="refreshButton" class="secondary">
           Refresh List
         </button>
-        <div id="notesList">Loading...</div>
+        <div id="notesList">Your saved content will appear here.</div>
       </div>
 
     </section>
@@ -248,20 +221,18 @@
     } from
       "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-    // Use the exact configuration from your WORKING login.html.
-  
-const firebaseConfig = {
-    apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53rUofsTN2M",
-    authDomain: "my-bitm-notes.firebaseapp.com",
-    projectId: "my-bitm-notes",
-    storageBucket: "my-bitm-notes.firebasestorage.app",
-    messagingSenderId: "806626631556",
-    appId: "1:806626631556:web:3e1ff6d9474580fc5e47d1",
-    measurementId: "G-RYR93GQ15R"
-};
+    // Same Firebase configuration as your working login.html.
+    const firebaseConfig = {
+      apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53rUofsTN2M",
+      authDomain: "my-bitm-notes.firebaseapp.com",
+      projectId: "my-bitm-notes",
+      storageBucket: "my-bitm-notes.firebasestorage.app",
+      messagingSenderId: "806626631556",
+      appId: "1:806626631556:web:3e1ff6d9474580fc5e47d1",
+      measurementId: "G-RYR93GQ15R"
+    };
 
-    // IMPORTANT: Replace this with your actual admin login email.
-    const ADMIN_EMAIL = "YOUR_ADMIN_EMAIL_HERE".toLowerCase();
+    const ADMIN_EMAIL = "ashminnepal@gmail.com".toLowerCase();
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -289,7 +260,7 @@ const firebaseConfig = {
         user.email || "";
     }
 
-    // Show / hide password.
+    // Show or hide password.
     document.getElementById("togglePassword").addEventListener(
       "click", () => {
         const password = document.getElementById("password");
@@ -301,7 +272,7 @@ const firebaseConfig = {
       }
     );
 
-    // Login.
+    // Admin login.
     document.getElementById("loginForm").addEventListener(
       "submit", async (event) => {
         event.preventDefault();
@@ -312,6 +283,14 @@ const firebaseConfig = {
             .value.trim().toLowerCase();
           const password = document.getElementById("password").value;
 
+          if (email !== ADMIN_EMAIL) {
+            showMessage(
+              "Access denied. Please use the configured admin email.",
+              true
+            );
+            return;
+          }
+
           await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
           showMessage("Login failed: " + error.message, true);
@@ -319,11 +298,11 @@ const firebaseConfig = {
       }
     );
 
-    // Forgot password.
+    // Password reset.
     document.getElementById("forgotPassword").addEventListener(
       "click", async () => {
         const email = document.getElementById("email")
-          .value.trim();
+          .value.trim().toLowerCase();
 
         if (!email) {
           showMessage(
@@ -334,10 +313,15 @@ const firebaseConfig = {
           return;
         }
 
+        if (email !== ADMIN_EMAIL) {
+          showMessage("Enter your admin email address.", true);
+          return;
+        }
+
         try {
           await sendPasswordResetEmail(auth, email);
           showMessage(
-            "If this email belongs to an account, password reset instructions have been sent. Check your inbox and spam folder."
+            "If the account exists, a password reset email has been sent. Check your inbox and spam folder."
           );
         } catch (error) {
           showMessage("Password reset failed: " + error.message, true);
@@ -345,24 +329,17 @@ const firebaseConfig = {
       }
     );
 
-    // Only the configured admin email can open this dashboard.
-    // Firestore security rules must also restrict access on the server.
+    // Verify the signed-in account.
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         showLogin();
         return;
       }
 
-      if (
-        ADMIN_EMAIL === "ashminnepal@gmail.com" ||
-        (user.email || "").toLowerCase() !== ADMIN_EMAIL
-      ) {
+      if ((user.email || "").toLowerCase() !== ADMIN_EMAIL) {
         await signOut(auth);
         showLogin();
-        showMessage(
-          "Access denied. Set ADMIN_EMAIL in admin.html to your admin login email.",
-          true
-        );
+        showMessage("Access denied. This account is not the admin.", true);
         return;
       }
 
@@ -370,7 +347,7 @@ const firebaseConfig = {
       await loadNotes();
     });
 
-    // Save a note link.
+    // Save content links to Firestore.
     document.getElementById("noteForm").addEventListener(
       "submit", async (event) => {
         event.preventDefault();
@@ -395,7 +372,7 @@ const firebaseConfig = {
             chapter: document.getElementById("chapter").value.trim(),
             type: document.getElementById("type").value,
             title: document.getElementById("title").value.trim(),
-            pdfLink,
+            pdfLink: pdfLink,
             createdAt: serverTimestamp()
           });
 
@@ -408,7 +385,7 @@ const firebaseConfig = {
       }
     );
 
-    // Load saved notes.
+    // Display saved content.
     async function loadNotes() {
       notesList.textContent = "Loading...";
 
