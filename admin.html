@@ -1,125 +1,227 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My BITM Notes - Admin Dashboard</title>
+  <title>My BITM Notes - Admin</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       padding: 20px;
-      font-family: Arial, sans-serif;
       background: #f4f7fb;
       color: #111827;
+      font-family: Arial, sans-serif;
     }
 
     .container {
-      max-width: 650px;
+      width: 100%;
+      max-width: 750px;
       margin: 30px auto;
-      padding: 24px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px #00000012;
     }
 
-    h1 { color: #0b4db8; }
-    h2 { margin-top: 28px; font-size: 20px; }
+    .card {
+      background: white;
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+      box-shadow: 0 3px 15px #00000010;
+    }
+
+    h1, h2 {
+      color: #0b4db8;
+      margin-top: 0;
+    }
 
     input, select, button {
       width: 100%;
       padding: 12px;
       margin: 8px 0;
-      border: 1px solid #d1d5db;
-      border-radius: 7px;
+      border-radius: 8px;
       font-size: 15px;
     }
 
-    button {
-      background: #0b4db8;
-      color: white;
-      border: none;
-      cursor: pointer;
+    input, select {
+      border: 1px solid #d1d5db;
+      background: white;
+      color: #111827;
     }
 
-    button:hover { background: #083b91; }
-    button:disabled { opacity: 0.6; cursor: wait; }
-    .secondary { background: #4b5563; }
-    #message { overflow-wrap: anywhere; line-height: 1.5; }
-    .hidden { display: none; }
-    .note { color: #4b5563; font-size: 14px; line-height: 1.5; }
+    button {
+      border: none;
+      background: #0b4db8;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .secondary {
+      background: #e8f0ff;
+      color: #0b4db8;
+    }
+
+    .danger {
+      background: #b91c1c;
+    }
+
+    .password-box {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .password-box input {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .password-box button {
+      width: auto;
+      min-width: 85px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .note {
+      padding: 14px 0;
+      border-bottom: 1px solid #e5e7eb;
+      overflow-wrap: anywhere;
+    }
+
+    .note a {
+      color: #0b4db8;
+    }
+
+    #message {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      margin-top: 12px;
+    }
+
+    .small {
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 1.5;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>My BITM Notes</h1>
-    <h2>Admin Dashboard</h2>
 
-    <section id="loginSection">
-      <p>Sign in with your admin account.</p>
+    <div class="card">
+      <h1>My BITM Notes</h1>
+      <p>Admin Dashboard</p>
+      <div id="message" role="status"></div>
+    </div>
 
-      <input id="email" type="email"
-        placeholder="Admin email" autocomplete="username" required>
+    <!-- LOGIN -->
+    <section id="loginSection" class="card">
+      <h2>Admin Login</h2>
 
-      <input id="password" type="password"
-        placeholder="Password" autocomplete="current-password" required>
+      <form id="loginForm">
+        <label for="email">Email address</label>
+        <input id="email" type="email"
+               placeholder="Enter your email" required>
 
-      <button id="loginBtn">Login</button>
-    </section>
+        <label for="password">Password</label>
+        <div class="password-box">
+          <input id="password" type="password"
+                 placeholder="Enter your password" required>
+          <button type="button" id="togglePassword"
+                  class="secondary">Show</button>
+        </div>
 
-    <section id="dashboard" class="hidden">
-      <p>Admin signed in successfully.</p>
-      <button id="logoutBtn" class="secondary">Logout</button>
+        <button type="submit">Login</button>
+      </form>
 
-      <h2>Add Notes or Assignment</h2>
+      <button type="button" id="forgotPassword"
+              class="secondary">Forgot Password?</button>
 
-      <label for="semester">Semester</label>
-      <select id="semester">
-        <option value="1">Semester 1</option>
-        <option value="2">Semester 2</option>
-        <option value="3">Semester 3</option>
-        <option value="4">Semester 4</option>
-        <option value="5">Semester 5</option>
-        <option value="6">Semester 6</option>
-        <option value="7">Semester 7</option>
-        <option value="8">Semester 8</option>
-      </select>
-
-      <label for="subject">Subject name</label>
-      <input id="subject" type="text" placeholder="e.g. C Programming">
-
-      <label for="chapter">Chapter name or number</label>
-      <input id="chapter" type="text" placeholder="e.g. Chapter 1">
-
-      <label for="type">Content type</label>
-      <select id="type">
-        <option value="Syllabus">Syllabus</option>
-        <option value="Notes">Notes</option>
-        <option value="Assignment">Assignment</option>
-      </select>
-
-      <label for="title">Title</label>
-      <input id="title" type="text" placeholder="Enter title">
-
-      <label for="url">Google Drive PDF link</label>
-      <input id="url" type="url" placeholder="Paste PDF link">
-
-      <p class="note">
-        Upload your PDF to Google Drive first. Set its sharing access
-        to allow people with the link to view it, then paste the link here.
+      <p class="small">
+        Password reset instructions will be sent to your email address.
       </p>
-
-      <button id="saveBtn">Save Content</button>
-
-      <h2>Saved Content</h2>
-      <div id="savedList">Loading...</div>
     </section>
 
-    <p id="message" role="status"></p>
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="hidden">
+
+      <div class="card">
+        <h2>Welcome, Admin</h2>
+        <p id="signedInEmail"></p>
+        <button id="logoutButton" class="danger">Logout</button>
+      </div>
+
+      <div class="card">
+        <h2>Add Notes or Assignment</h2>
+
+        <form id="noteForm">
+          <label for="semester">Semester</label>
+          <select id="semester" required>
+            <option value="">Select semester</option>
+            <option>Semester 1</option>
+            <option>Semester 2</option>
+            <option>Semester 3</option>
+            <option>Semester 4</option>
+            <option>Semester 5</option>
+            <option>Semester 6</option>
+            <option>Semester 7</option>
+            <option>Semester 8</option>
+          </select>
+
+          <label for="subject">Subject</label>
+          <input id="subject" type="text"
+                 placeholder="Enter subject name" required>
+
+          <label for="chapter">Chapter</label>
+          <input id="chapter" type="text"
+                 placeholder="e.g. Chapter 1" required>
+
+          <label for="type">Content type</label>
+          <select id="type" required>
+            <option value="Notes">Notes</option>
+            <option value="Assignment">Assignment</option>
+            <option value="Syllabus">Syllabus</option>
+          </select>
+
+          <label for="title">Title</label>
+          <input id="title" type="text"
+                 placeholder="Enter title" required>
+
+          <label for="pdfLink">Google Drive PDF link</label>
+          <input id="pdfLink" type="url"
+                 placeholder="Paste your PDF link" required>
+
+          <button type="submit">Save Content</button>
+        </form>
+
+        <p class="small">
+          Upload the PDF to Google Drive first. Set its sharing to
+          anyone with the link can view, then paste the link above.
+          This form saves the link, not the PDF file itself.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>Saved Content</h2>
+        <button id="refreshButton" class="secondary">
+          Refresh List
+        </button>
+        <div id="notesList">Loading...</div>
+      </div>
+
+    </section>
   </div>
 
   <script type="module">
@@ -129,9 +231,11 @@
     import {
       getAuth,
       signInWithEmailAndPassword,
+      sendPasswordResetEmail,
       onAuthStateChanged,
       signOut
-    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+    } from
+      "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
     import {
       getFirestore,
@@ -141,11 +245,12 @@
       query,
       orderBy,
       serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+    } from
+      "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-    // Firebase configuration for My BITM Notes Website
+    // Use the exact configuration from your WORKING login.html.
     const firebaseConfig = {
-      apiKey: "AIzaSyDi2MagVoXj6STUHR8gTCAp53rUofsTN2M",
+      apiKey: "AIzaSyDi2MagVoXj6STUHRg8CAp53rUofsTN2M",
       authDomain: "my-bitm-notes.firebaseapp.com",
       projectId: "my-bitm-notes",
       storageBucket: "my-bitm-notes.firebasestorage.app",
@@ -154,159 +259,215 @@
       measurementId: "G-6GSR9MPN9D"
     };
 
-    // IMPORTANT: This must match the UID of your current admin account.
-    const ADMIN_UID = "FyAPkA9vrjOtGlTHluR4dSDzAOF2";
+    // IMPORTANT: Replace this with your actual admin login email.
+    const ADMIN_EMAIL = "YOUR_ADMIN_EMAIL_HERE".toLowerCase();
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const $ = id => document.getElementById(id);
-    const message = $("message");
+    const loginSection = document.getElementById("loginSection");
+    const dashboard = document.getElementById("dashboard");
+    const message = document.getElementById("message");
+    const notesList = document.getElementById("notesList");
 
-    $("loginBtn").addEventListener("click", async () => {
-      message.textContent = "";
-      $("loginBtn").disabled = true;
+    function showMessage(text, isError = false) {
+      message.textContent = text;
+      message.style.color = isError ? "#b91c1c" : "#166534";
+    }
 
-      try {
-        await signInWithEmailAndPassword(
-          auth,
-          $("email").value.trim(),
-          $("password").value
-        );
-      } catch (error) {
-        message.textContent = "Login failed: " + error.message;
-      } finally {
-        $("loginBtn").disabled = false;
+    function showLogin() {
+      loginSection.classList.remove("hidden");
+      dashboard.classList.add("hidden");
+    }
+
+    function showDashboard(user) {
+      loginSection.classList.add("hidden");
+      dashboard.classList.remove("hidden");
+      document.getElementById("signedInEmail").textContent =
+        user.email || "";
+    }
+
+    // Show / hide password.
+    document.getElementById("togglePassword").addEventListener(
+      "click", () => {
+        const password = document.getElementById("password");
+        const button = document.getElementById("togglePassword");
+        const visible = password.type === "password";
+
+        password.type = visible ? "text" : "password";
+        button.textContent = visible ? "Hide" : "Show";
       }
-    });
+    );
 
-    $("logoutBtn").addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        message.textContent = "You have logged out.";
-      } catch (error) {
-        message.textContent = "Logout failed: " + error.message;
+    // Login.
+    document.getElementById("loginForm").addEventListener(
+      "submit", async (event) => {
+        event.preventDefault();
+        showMessage("Signing in...");
+
+        try {
+          const email = document.getElementById("email")
+            .value.trim().toLowerCase();
+          const password = document.getElementById("password").value;
+
+          await signInWithEmailAndPassword(auth, email, password);
+        } catch (error) {
+          showMessage("Login failed: " + error.message, true);
+        }
       }
-    });
+    );
 
-    onAuthStateChanged(auth, async user => {
-      if (!user) {
-        $("loginSection").classList.remove("hidden");
-        $("dashboard").classList.add("hidden");
-        return;
-      }
+    // Forgot password.
+    document.getElementById("forgotPassword").addEventListener(
+      "click", async () => {
+        const email = document.getElementById("email")
+          .value.trim();
 
-      if (user.uid !== ADMIN_UID) {
-        await signOut(auth);
-        message.textContent =
-          "Access denied. Your current account is not configured as admin.";
-        return;
-      }
-
-      $("loginSection").classList.add("hidden");
-      $("dashboard").classList.remove("hidden");
-      await loadContent();
-    });
-
-    $("saveBtn").addEventListener("click", async () => {
-      const user = auth.currentUser;
-
-      if (!user || user.uid !== ADMIN_UID) {
-        message.textContent = "Please sign in with the admin account.";
-        return;
-      }
-
-      const subject = $("subject").value.trim();
-      const chapter = $("chapter").value.trim();
-      const title = $("title").value.trim();
-      const url = $("url").value.trim();
-
-      if (!subject || !chapter || !title || !url) {
-        message.textContent = "Please fill in every field.";
-        return;
-      }
-
-      if (!/^https:\/\/(drive\.google\.com|docs\.google\.com)\//i.test(url)) {
-        message.textContent = "Please enter a valid Google Drive link.";
-        return;
-      }
-
-      $("saveBtn").disabled = true;
-      message.textContent = "Saving...";
-
-      try {
-        await addDoc(collection(db, "notes"), {
-          semester: $("semester").value,
-          subject,
-          chapter,
-          type: $("type").value,
-          title,
-          url,
-          createdAt: serverTimestamp()
-        });
-
-        message.textContent = "Content saved successfully.";
-
-        $("subject").value = "";
-        $("chapter").value = "";
-        $("title").value = "";
-        $("url").value = "";
-
-        await loadContent();
-      } catch (error) {
-        message.textContent = "Could not save: " + error.message;
-      } finally {
-        $("saveBtn").disabled = false;
-      }
-    });
-
-    async function loadContent() {
-      try {
-        const result = await getDocs(
-          query(collection(db, "notes"), orderBy("createdAt", "desc"))
-        );
-
-        const list = $("savedList");
-        list.replaceChildren();
-
-        if (result.empty) {
-          list.textContent = "No content has been added yet.";
+        if (!email) {
+          showMessage(
+            "Enter your email address first, then click Forgot Password.",
+            true
+          );
+          document.getElementById("email").focus();
           return;
         }
 
-        result.forEach(docSnap => {
-          const data = docSnap.data();
-          const item = document.createElement("div");
+        try {
+          await sendPasswordResetEmail(auth, email);
+          showMessage(
+            "If this email belongs to an account, password reset instructions have been sent. Check your inbox and spam folder."
+          );
+        } catch (error) {
+          showMessage("Password reset failed: " + error.message, true);
+        }
+      }
+    );
 
-          item.style.padding = "12px 0";
-          item.style.borderBottom = "1px solid #ddd";
+    // Only the configured admin email can open this dashboard.
+    // Firestore security rules must also restrict access on the server.
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        showLogin();
+        return;
+      }
 
-          const heading = document.createElement("strong");
-          heading.textContent = data.title || "Untitled";
-          item.appendChild(heading);
+      if (
+        ADMIN_EMAIL === "YOUR_ADMIN_EMAIL_HERE" ||
+        (user.email || "").toLowerCase() !== ADMIN_EMAIL
+      ) {
+        await signOut(auth);
+        showLogin();
+        showMessage(
+          "Access denied. Set ADMIN_EMAIL in admin.html to your admin login email.",
+          true
+        );
+        return;
+      }
+
+      showDashboard(user);
+      await loadNotes();
+    });
+
+    // Save a note link.
+    document.getElementById("noteForm").addEventListener(
+      "submit", async (event) => {
+        event.preventDefault();
+
+        const user = auth.currentUser;
+        if (!user || (user.email || "").toLowerCase() !== ADMIN_EMAIL) {
+          showMessage("You are not authorized to save content.", true);
+          return;
+        }
+
+        const pdfLink = document.getElementById("pdfLink").value.trim();
+
+        try {
+          const parsedLink = new URL(pdfLink);
+          if (parsedLink.protocol !== "https:") {
+            throw new Error("Use a valid HTTPS link.");
+          }
+
+          await addDoc(collection(db, "notes"), {
+            semester: document.getElementById("semester").value,
+            subject: document.getElementById("subject").value.trim(),
+            chapter: document.getElementById("chapter").value.trim(),
+            type: document.getElementById("type").value,
+            title: document.getElementById("title").value.trim(),
+            pdfLink,
+            createdAt: serverTimestamp()
+          });
+
+          document.getElementById("noteForm").reset();
+          showMessage("Content saved successfully.");
+          await loadNotes();
+        } catch (error) {
+          showMessage("Could not save content: " + error.message, true);
+        }
+      }
+    );
+
+    // Load saved notes.
+    async function loadNotes() {
+      notesList.textContent = "Loading...";
+
+      try {
+        const notesQuery = query(
+          collection(db, "notes"),
+          orderBy("createdAt", "desc")
+        );
+
+        const snapshot = await getDocs(notesQuery);
+        notesList.replaceChildren();
+
+        if (snapshot.empty) {
+          notesList.textContent = "No content has been added yet.";
+          return;
+        }
+
+        snapshot.forEach((documentSnapshot) => {
+          const item = documentSnapshot.data();
+          const div = document.createElement("div");
+          div.className = "note";
+
+          const heading = document.createElement("h3");
+          heading.textContent = item.title || "Untitled";
 
           const details = document.createElement("p");
           details.textContent =
-            "Semester " + data.semester + " · " +
-            data.subject + " · " + data.chapter + " · " + data.type;
-          item.appendChild(details);
+            `${item.semester || ""} · ${item.subject || ""} · ` +
+            `${item.chapter || ""} · ${item.type || ""}`;
 
           const link = document.createElement("a");
-          link.href = data.url;
+          link.href = item.pdfLink;
           link.target = "_blank";
           link.rel = "noopener noreferrer";
-          link.textContent = "Open PDF";
-          item.appendChild(link);
+          link.textContent = "Open PDF link";
 
-          list.appendChild(item);
+          div.append(heading, details, link);
+          notesList.appendChild(div);
         });
       } catch (error) {
-        $("savedList").textContent =
+        notesList.textContent =
           "Could not load content: " + error.message;
       }
     }
+
+    document.getElementById("refreshButton").addEventListener(
+      "click", loadNotes
+    );
+
+    // Logout.
+    document.getElementById("logoutButton").addEventListener(
+      "click", async () => {
+        try {
+          await signOut(auth);
+          showMessage("You have logged out.");
+        } catch (error) {
+          showMessage("Logout failed: " + error.message, true);
+        }
+      }
+    );
   </script>
 </body>
 </html>
-```
