@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My BITM Notes - Admin</title>
+  <title>My BITM Notes - Admin Dashboard</title>
+
   <style>
     * { box-sizing: border-box; }
 
@@ -45,9 +46,9 @@
     }
 
     button:hover { background: #083b91; }
-
+    button:disabled { opacity: 0.6; cursor: wait; }
     .secondary { background: #4b5563; }
-    #message { overflow-wrap: anywhere; }
+    #message { overflow-wrap: anywhere; line-height: 1.5; }
     .hidden { display: none; }
     .note { color: #4b5563; font-size: 14px; line-height: 1.5; }
   </style>
@@ -60,8 +61,13 @@
 
     <section id="loginSection">
       <p>Sign in with your admin account.</p>
-      <input id="email" type="email" placeholder="Admin email" autocomplete="username">
-      <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+
+      <input id="email" type="email"
+        placeholder="Admin email" autocomplete="username" required>
+
+      <input id="password" type="password"
+        placeholder="Password" autocomplete="current-password" required>
+
       <button id="loginBtn">Login</button>
     </section>
 
@@ -99,12 +105,12 @@
       <label for="title">Title</label>
       <input id="title" type="text" placeholder="Enter title">
 
-      <label for="url">PDF link</label>
-      <input id="url" type="url" placeholder="Paste Google Drive PDF link">
+      <label for="url">Google Drive PDF link</label>
+      <input id="url" type="url" placeholder="Paste PDF link">
 
       <p class="note">
-        First upload your PDF to Google Drive. Set its sharing access
-        so people with the link can view it, then paste its link here.
+        Upload your PDF to Google Drive first. Set its sharing access
+        to allow people with the link to view it, then paste the link here.
       </p>
 
       <button id="saveBtn">Save Content</button>
@@ -137,16 +143,18 @@
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
+    // Firebase configuration for My BITM Notes Website
     const firebaseConfig = {
       apiKey: "AIzaSyDi2MagVoXj6STUHR8gTCAp53rUofsTN2M",
       authDomain: "my-bitm-notes.firebaseapp.com",
       projectId: "my-bitm-notes",
       storageBucket: "my-bitm-notes.firebasestorage.app",
       messagingSenderId: "806626631556",
-      appId: "1:806626631556:web:3e1ff6d9474580fc5e47d1",
-      measurementId: "G-RYR93GQ15R"
+      appId: "1:806626631556:web:54d106fb701ebf9a5e47d1",
+      measurementId: "G-6GSR9MPN9D"
     };
 
+    // IMPORTANT: This must match the UID of your current admin account.
     const ADMIN_UID = "FyAPkA9vrjOtGlTHluR4dSDzAOF2";
 
     const app = initializeApp(firebaseConfig);
@@ -158,6 +166,7 @@
 
     $("loginBtn").addEventListener("click", async () => {
       message.textContent = "";
+      $("loginBtn").disabled = true;
 
       try {
         await signInWithEmailAndPassword(
@@ -167,11 +176,18 @@
         );
       } catch (error) {
         message.textContent = "Login failed: " + error.message;
+      } finally {
+        $("loginBtn").disabled = false;
       }
     });
 
     $("logoutBtn").addEventListener("click", async () => {
-      await signOut(auth);
+      try {
+        await signOut(auth);
+        message.textContent = "You have logged out.";
+      } catch (error) {
+        message.textContent = "Logout failed: " + error.message;
+      }
     });
 
     onAuthStateChanged(auth, async user => {
@@ -183,7 +199,8 @@
 
       if (user.uid !== ADMIN_UID) {
         await signOut(auth);
-        message.textContent = "Access denied. Admin account required.";
+        message.textContent =
+          "Access denied. Your current account is not configured as admin.";
         return;
       }
 
@@ -211,11 +228,12 @@
       }
 
       if (!/^https:\/\/(drive\.google\.com|docs\.google\.com)\//i.test(url)) {
-        message.textContent = "Please enter a Google Drive PDF link.";
+        message.textContent = "Please enter a valid Google Drive link.";
         return;
       }
 
       $("saveBtn").disabled = true;
+      message.textContent = "Saving...";
 
       try {
         await addDoc(collection(db, "notes"), {
@@ -228,11 +246,13 @@
           createdAt: serverTimestamp()
         });
 
-        message.textContent = "Saved successfully.";
+        message.textContent = "Content saved successfully.";
+
         $("subject").value = "";
         $("chapter").value = "";
         $("title").value = "";
         $("url").value = "";
+
         await loadContent();
       } catch (error) {
         message.textContent = "Could not save: " + error.message;
@@ -258,6 +278,7 @@
         result.forEach(docSnap => {
           const data = docSnap.data();
           const item = document.createElement("div");
+
           item.style.padding = "12px 0";
           item.style.borderBottom = "1px solid #ddd";
 
