@@ -1,0 +1,291 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My BITM Notes - Admin</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 30px auto;
+      padding: 24px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px #00000012;
+    }
+
+    h1 { color: #0b4db8; }
+    h2 { margin-top: 28px; font-size: 20px; }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #d1d5db;
+      border-radius: 7px;
+      font-size: 15px;
+    }
+
+    button {
+      background: #0b4db8;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover { background: #083b91; }
+
+    .secondary { background: #4b5563; }
+    #message { overflow-wrap: anywhere; }
+    .hidden { display: none; }
+    .note { color: #4b5563; font-size: 14px; line-height: 1.5; }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>My BITM Notes</h1>
+    <h2>Admin Dashboard</h2>
+
+    <section id="loginSection">
+      <p>Sign in with your admin account.</p>
+      <input id="email" type="email" placeholder="Admin email" autocomplete="username">
+      <input id="password" type="password" placeholder="Password" autocomplete="current-password">
+      <button id="loginBtn">Login</button>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <p>Admin signed in successfully.</p>
+      <button id="logoutBtn" class="secondary">Logout</button>
+
+      <h2>Add Notes or Assignment</h2>
+
+      <label for="semester">Semester</label>
+      <select id="semester">
+        <option value="1">Semester 1</option>
+        <option value="2">Semester 2</option>
+        <option value="3">Semester 3</option>
+        <option value="4">Semester 4</option>
+        <option value="5">Semester 5</option>
+        <option value="6">Semester 6</option>
+        <option value="7">Semester 7</option>
+        <option value="8">Semester 8</option>
+      </select>
+
+      <label for="subject">Subject name</label>
+      <input id="subject" type="text" placeholder="e.g. C Programming">
+
+      <label for="chapter">Chapter name or number</label>
+      <input id="chapter" type="text" placeholder="e.g. Chapter 1">
+
+      <label for="type">Content type</label>
+      <select id="type">
+        <option value="Syllabus">Syllabus</option>
+        <option value="Notes">Notes</option>
+        <option value="Assignment">Assignment</option>
+      </select>
+
+      <label for="title">Title</label>
+      <input id="title" type="text" placeholder="Enter title">
+
+      <label for="url">PDF link</label>
+      <input id="url" type="url" placeholder="Paste Google Drive PDF link">
+
+      <p class="note">
+        First upload your PDF to Google Drive. Set its sharing access
+        so people with the link can view it, then paste its link here.
+      </p>
+
+      <button id="saveBtn">Save Content</button>
+
+      <h2>Saved Content</h2>
+      <div id="savedList">Loading...</div>
+    </section>
+
+    <p id="message" role="status"></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      getDocs,
+      query,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDi2MagVoXj6STUHR8gTCAp53rUofsTN2M",
+      authDomain: "my-bitm-notes.firebaseapp.com",
+      projectId: "my-bitm-notes",
+      storageBucket: "my-bitm-notes.firebasestorage.app",
+      messagingSenderId: "806626631556",
+      appId: "1:806626631556:web:3e1ff6d9474580fc5e47d1",
+      measurementId: "G-RYR93GQ15R"
+    };
+
+    const ADMIN_UID = "FyAPkA9vrjOtGlTHluR4dSDzAOF2";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const $ = id => document.getElementById(id);
+    const message = $("message");
+
+    $("loginBtn").addEventListener("click", async () => {
+      message.textContent = "";
+
+      try {
+        await signInWithEmailAndPassword(
+          auth,
+          $("email").value.trim(),
+          $("password").value
+        );
+      } catch (error) {
+        message.textContent = "Login failed: " + error.message;
+      }
+    });
+
+    $("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        $("loginSection").classList.remove("hidden");
+        $("dashboard").classList.add("hidden");
+        return;
+      }
+
+      if (user.uid !== ADMIN_UID) {
+        await signOut(auth);
+        message.textContent = "Access denied. Admin account required.";
+        return;
+      }
+
+      $("loginSection").classList.add("hidden");
+      $("dashboard").classList.remove("hidden");
+      await loadContent();
+    });
+
+    $("saveBtn").addEventListener("click", async () => {
+      const user = auth.currentUser;
+
+      if (!user || user.uid !== ADMIN_UID) {
+        message.textContent = "Please sign in with the admin account.";
+        return;
+      }
+
+      const subject = $("subject").value.trim();
+      const chapter = $("chapter").value.trim();
+      const title = $("title").value.trim();
+      const url = $("url").value.trim();
+
+      if (!subject || !chapter || !title || !url) {
+        message.textContent = "Please fill in every field.";
+        return;
+      }
+
+      if (!/^https:\/\/(drive\.google\.com|docs\.google\.com)\//i.test(url)) {
+        message.textContent = "Please enter a Google Drive PDF link.";
+        return;
+      }
+
+      $("saveBtn").disabled = true;
+
+      try {
+        await addDoc(collection(db, "notes"), {
+          semester: $("semester").value,
+          subject,
+          chapter,
+          type: $("type").value,
+          title,
+          url,
+          createdAt: serverTimestamp()
+        });
+
+        message.textContent = "Saved successfully.";
+        $("subject").value = "";
+        $("chapter").value = "";
+        $("title").value = "";
+        $("url").value = "";
+        await loadContent();
+      } catch (error) {
+        message.textContent = "Could not save: " + error.message;
+      } finally {
+        $("saveBtn").disabled = false;
+      }
+    });
+
+    async function loadContent() {
+      try {
+        const result = await getDocs(
+          query(collection(db, "notes"), orderBy("createdAt", "desc"))
+        );
+
+        const list = $("savedList");
+        list.replaceChildren();
+
+        if (result.empty) {
+          list.textContent = "No content has been added yet.";
+          return;
+        }
+
+        result.forEach(docSnap => {
+          const data = docSnap.data();
+          const item = document.createElement("div");
+          item.style.padding = "12px 0";
+          item.style.borderBottom = "1px solid #ddd";
+
+          const heading = document.createElement("strong");
+          heading.textContent = data.title || "Untitled";
+          item.appendChild(heading);
+
+          const details = document.createElement("p");
+          details.textContent =
+            "Semester " + data.semester + " · " +
+            data.subject + " · " + data.chapter + " · " + data.type;
+          item.appendChild(details);
+
+          const link = document.createElement("a");
+          link.href = data.url;
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = "Open PDF";
+          item.appendChild(link);
+
+          list.appendChild(item);
+        });
+      } catch (error) {
+        $("savedList").textContent =
+          "Could not load content: " + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
+```
