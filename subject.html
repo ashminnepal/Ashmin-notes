@@ -924,15 +924,28 @@ darkModeButton.addEventListener("click", () => {
 
 /* ADMIN LOGIN STATUS */
 
+/* ADMIN LOGIN STATUS - DIAGNOSTIC */
+
 onAuthStateChanged(auth, async user => {
     isAdmin = !!user && user.uid === ADMIN_UID;
 
-    // Re-render immediately when admin status changes.
     renderChapters();
-
-    // Then load the saved notes from Firestore.
     await loadNotes();
+
+    if (!user) {
+        pageStatus.textContent =
+            "Status: Not logged in. Please log in first.";
+    } else if (!isAdmin) {
+        pageStatus.textContent =
+            "Status: Logged in, but this account is not recognized as admin. UID: " +
+            user.uid;
+    } else {
+        pageStatus.textContent =
+            "Status: Admin recognized. Upload buttons should be visible.";
+        renderChapters();
+    }
 });
+
 </script>
 
 </body>
