@@ -764,11 +764,40 @@ function renderChapters() {
         const savedPdfs = document.createElement("div");
         savedPdfs.className = "saved-pdfs";
 
-        getChapterNotes(chapterNumber).forEach(note => {
-            if (isValidPdfLink(note.pdfLink)) {
-                savedPdfs.appendChild(makePdfLink(note));
-            }
+       
+["Syllabus", "Assignment"].forEach(type => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "pdf-button";
+    button.textContent = type;
+
+    button.addEventListener("click", () => {
+        const matchingNotes = getChapterNotes(chapterNumber)
+            .filter(note =>
+                note.type === type && isValidPdfLink(note.pdfLink)
+            );
+
+        if (matchingNotes.length === 0) {
+            alert(`No ${type} PDF is available for this chapter yet.`);
+            return;
+        }
+
+        matchingNotes.forEach(note => {
+            window.open(note.pdfLink, "_blank", "noopener,noreferrer");
         });
+    });
+
+    options.appendChild(button);
+});
+
+getChapterNotes(chapterNumber).forEach(note => {
+    if (
+        !["Syllabus", "Assignment"].includes(note.type) &&
+        isValidPdfLink(note.pdfLink)
+    ) {
+        savedPdfs.appendChild(makePdfLink(note));
+    }
+});
 
         if (isAdmin) {
             const addButton = document.createElement("button");
