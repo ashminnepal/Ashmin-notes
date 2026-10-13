@@ -617,31 +617,25 @@ let savedNotes = [];
 
 /* DISPLAY SUBJECT INFORMATION */
 
+
+/* DISPLAY SUBJECT INFORMATION */
+
 if (!subjectName) {
-    const subjectNameElement = document.getElementById("subjectName");
-    const semesterNameElement = document.getElementById("semesterName");
+    document.getElementById("subjectName").textContent =
+        "Subject not found";
 
-    if (subjectNameElement) {
-        subjectNameElement.textContent = "Subject not found";
-    }
+    document.getElementById("semesterName").textContent = "";
 
-    if (semesterNameElement) {
-        semesterNameElement.textContent = "";
-    }
+    chapterGrid.textContent =
+        "Please return to the main page and select a subject.";
 
-    if (chapterGrid) {
-        chapterGrid.textContent =
-            "Please return to the main page and select a subject.";
-    }
-
-    return;
+    throw new Error("Invalid semester or subject selection.");
 }
 
-} else {
-    document.getElementById("subjectName").textContent = subjectName;
-    document.getElementById("semesterName").textContent =
-        `Semester ${semester} • BITM`;
-}
+document.getElementById("subjectName").textContent = subjectName;
+
+document.getElementById("semesterName").textContent =
+    `Semester ${semester} • BITM`;
 
 /* ACCEPT EXISTING GOOGLE DRIVE LINKS AND NEW SUPABASE PDF LINKS */
 
