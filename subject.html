@@ -267,6 +267,17 @@ body {
     overflow-wrap: anywhere;
 }
 
+.login-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 9px 14px;
+    background: #0b4db8;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
 body.dark-mode {
     background: #111827;
     color: #f9fafb;
@@ -348,7 +359,8 @@ body.dark-mode .saved-pdf:hover {
     background: #334b70;
 }
 
-body.dark-mode .admin-add-button {
+body.dark-mode .admin-add-button,
+body.dark-mode .login-link {
     background: #2563eb;
     color: white;
 }
@@ -428,7 +440,10 @@ body.dark-mode .pdf-status {
 
     <div class="chapter-title">Chapters</div>
     <div class="chapter-grid" id="chapterGrid"></div>
-    <p class="pdf-status" id="pageStatus" role="status"></p>
+    <p class="pdf-status" id="pageStatus" role="status" aria-live="polite">
+        Checking login status...
+    </p>
+    <div id="loginAction"></div>
 </div>
 
 <script type="module">
@@ -446,11 +461,13 @@ import {
 
 import {
     getAuth,
-    onAuthStateChanged
+    onAuthStateChanged,
+    setPersistence,
+    browserLocalPersistence
 } from
     "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
-/* USE THE SAME FIREBASE CONFIGURATION ON ALL PAGES */
+/* FIREBASE CONFIGURATION */
 
 const firebaseConfig = {
     apiKey: "AIzaSyDi2MagVoXj6STUHR8gTCAp53RuoFsTN2M",
@@ -541,8 +558,6 @@ const subjects = {
     ]
 };
 
-/* EXISTING CHAPTER LISTS */
-
 const chapters = {
     "1-1": [
         "Introduction to Programming Language",
@@ -601,6 +616,7 @@ const chapters = {
 const subjectName = subjects[semester]?.[subjectIndex];
 const chapterGrid = document.getElementById("chapterGrid");
 const pageStatus = document.getElementById("pageStatus");
+const loginAction = document.getElementById("loginAction");
 const searchInput = document.getElementById("searchInput");
 const darkModeButton = document.getElementById("darkModeButton");
 
@@ -619,7 +635,7 @@ document.getElementById("subjectName").textContent = subjectName;
 document.getElementById("semesterName").textContent =
     `Semester ${semester} • BITM`;
 
-/* VALIDATE PDF LINKS */
+/* PDF LINK VALIDATION */
 
 function isValidPdfLink(value) {
     try {
@@ -644,7 +660,7 @@ function isValidPdfLink(value) {
     }
 }
 
-/* FIND CONTENT FOR A CHAPTER */
+/* CHAPTER NOTES */
 
 function getChapterNotes(chapterNumber) {
     return savedNotes.filter(note =>
@@ -665,11 +681,13 @@ function makePdfLink(note) {
     return link;
 }
 
-/* UPLOAD A PDF FROM YOUR DEVICE */
+/* UPLOAD PDF */
 
 async function addPdfToChapter(chapterNumber) {
-    if (!auth.currentUser || auth.currentUser.uid !== ADMIN_UID) {
-        alert("Please sign in with your authorized admin account.");
+    const user = auth.currentUser;
+
+    if (!user || user.uid !== ADMIN_UID) {
+        alert("You are not signed in with the authorized admin account.");
         return;
     }
 
@@ -720,7 +738,7 @@ async function addPdfToChapter(chapterNumber) {
     try {
         pageStatus.textContent = "Uploading PDF... Please wait.";
 
-        const token = await auth.currentUser.getIdToken();
+        const token = await user.getIdToken();
         const formData = new FormData();
         formData.append("file", file);
 
@@ -763,14 +781,12 @@ async function addPdfToChapter(chapterNumber) {
     }
 }
 
-/* DISPLAY CHAPTERS AND UPLOAD OPTIONS */
+/* RENDER CHAPTER CARDS */
 
 function renderChapters() {
     chapterGrid.replaceChildren();
 
     const chapterList = chapters[`${semester}-${subjectIndex}`];
-
-    // If a subject has no chapter list yet, provide a general upload card.
     const hasChapterList = Array.isArray(chapterList);
     const itemsToRender = hasChapterList
         ? chapterList
@@ -836,7 +852,6 @@ function renderChapters() {
             )
         );
 
-        // Show the upload option only to the authorized admin.
         if (isAdmin) {
             const addButton = document.createElement("button");
             addButton.type = "button";
@@ -870,11 +885,9 @@ function renderChapters() {
     applySearch();
 }
 
-/* LOAD SAVED CONTENT */
+/* LOAD FIRESTORE NOTES */
 
 async function loadNotes() {
-    pageStatus.textContent = "Loading saved PDFs...";
-
     try {
         const snapshot = await getDocs(collection(db, "notes"));
 
@@ -884,11 +897,10 @@ async function loadNotes() {
         }));
 
         renderChapters();
-        pageStatus.textContent = "";
     } catch (error) {
         console.error("Could not load PDFs:", error);
         pageStatus.textContent =
-            "Could not load PDFs. Check your Firestore rules and internet connection.";
+            "Could not load PDFs. Check Firestore rules and your internet connection.";
     }
 }
 
@@ -918,34 +930,86 @@ applyDarkMode();
 darkModeButton.addEventListener("click", () => {
     const enabled = !document.body.classList.contains("dark-mode");
 
-    localStorage.setItem("darkMode", enabled ? "enabled" : "disabled");
+    localStorage.setItem(
+        "darkMode",
+        enabled ? "enabled" : "disabled"
+    );
+
     applyDarkMode();
 });
 
-/* ADMIN LOGIN STATUS */
+/* FIREBASE LOGIN AND ADMIN STATUS */
 
-/* ADMIN LOGIN STATUS - DIAGNOSTIC */
+function showLoginLink() {
+    loginAction.replaceChildren();
 
-onAuthStateChanged(auth, async user => {
-    isAdmin = !!user && user.uid === ADMIN_UID;
+    const link = document.createElement("a");
+    link.className = "login-link";
+    link.href = "login.html";
+    link.textContent = "Go to Login";
 
-    renderChapters();
-    await loadNotes();
+    loginAction.appendChild(link);
+}
 
-    if (!user) {
+async function startPage() {
+    pageStatus.textContent = "Checking Firebase login...";
+
+    try {
+        /*
+         * This sets browser-local persistence for this page.
+         * The login page must also successfully sign in to
+         * the same Firebase project.
+         */
+        await setPersistence(auth, browserLocalPersistence);
+
+        onAuthStateChanged(auth, async user => {
+            loginAction.replaceChildren();
+
+            isAdmin = !!user && user.uid === ADMIN_UID;
+
+            renderChapters();
+
+            if (!user) {
+                pageStatus.textContent =
+                    "Not logged in. Please sign in first.";
+                showLoginLink();
+            } else if (!isAdmin) {
+                pageStatus.textContent =
+                    "Signed in, but this account is not the authorized admin. " +
+                    "Current UID: " + user.uid;
+            } else {
+                pageStatus.textContent =
+                    "Admin recognized. Upload buttons should be visible.";
+            }
+
+            await loadNotes();
+
+            /*
+             * Keep the login status visible after notes load.
+             */
+            if (!user) {
+                pageStatus.textContent =
+                    "Not logged in. Please sign in first.";
+                showLoginLink();
+            } else if (!isAdmin) {
+                pageStatus.textContent =
+                    "Signed in, but this account is not the authorized admin. " +
+                    "Current UID: " + user.uid;
+            } else {
+                pageStatus.textContent =
+                    "Admin recognized. Upload buttons should be visible.";
+                renderChapters();
+            }
+        });
+    } catch (error) {
+        console.error("Firebase authentication error:", error);
         pageStatus.textContent =
-            "Status: Not logged in. Please log in first.";
-    } else if (!isAdmin) {
-        pageStatus.textContent =
-            "Status: Logged in, but this account is not recognized as admin. UID: " +
-            user.uid;
-    } else {
-        pageStatus.textContent =
-            "Status: Admin recognized. Upload buttons should be visible.";
-        renderChapters();
+            "Firebase authentication error: " + error.message;
     }
-});
+}
 
+renderChapters();
+startPage();
 </script>
 
 </body>
