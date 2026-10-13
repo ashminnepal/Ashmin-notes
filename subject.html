@@ -1,466 +1,15 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My BITM Notes</title>
-
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-body {
-    background: #f4f7fb;
-    color: #111827;
-}
-
-.header {
-    background: #F7FBFF;
-    padding: 14px 22px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 190px;
-}
-
-.logo-icon {
-    width: 46px;
-    height: 46px;
-    border-radius: 12px;
-    background: #0b4db8;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-}
-
-.logo-text h1 {
-    font-size: 22px;
-    color: #0b4db8;
-    line-height: 1;
-}
-
-.logo-text span {
-    font-size: 14px;
-    color: #6b7280;
-}
-
-.search-box {
-    flex: 1;
-    max-width: 650px;
-    background: #f4f7fb;
-    border: 1px solid #dbe3f0;
-    border-radius: 999px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 18px;
-}
-
-.search-box span {
-    color: #6b7280;
-    font-size: 18px;
-}
-
-.search-box input {
-    border: none;
-    outline: none;
-    background: transparent;
-    width: 100%;
-    font-size: 15px;
-    color: inherit;
-}
-
-.actions {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.profile {
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #e5e7eb;
-}
-
-.icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #f4f7fb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 18px;
-}
-
-.icon:hover {
-    background: #e8f0fe;
-}
-
-.main {
-    max-width: 1200px;
-    margin: auto;
-    padding: 30px;
-}
-
-.back-button {
-    display: inline-block;
-    margin-bottom: 25px;
-    padding: 10px 18px;
-    background: #0b4db8;
-    color: white;
-    text-decoration: none;
-    border-radius: 10px;
-    font-weight: 600;
-}
-
-.back-button:hover {
-    background: #0a44a3;
-}
-
-.subject-header {
-    background: #0b4db8;
-    color: white;
-    border-radius: 22px;
-    padding: 30px;
-    margin-bottom: 30px;
-}
-
-.subject-header h1 {
-    font-size: 30px;
-    margin-bottom: 8px;
-}
-
-.subject-header p {
-    font-size: 16px;
-    opacity: 0.9;
-}
-
-.chapter-title {
-    font-size: 24px;
-    color: #0b4db8;
-    margin-bottom: 20px;
-    font-weight: 700;
-}
-
-.chapter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.chapter-card {
-    background: white;
-    border-radius: 18px;
-    padding: 22px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    border-left: 6px solid #0b4db8;
-    transition: 0.2s;
-    min-width: 0;
-}
-
-.chapter-card:hover {
-    transform: translateY(-3px);
-    background: #f8fbff;
-}
-
-.chapter-number {
-    font-size: 14px;
-    font-weight: 700;
-    color: #0b4db8;
-    margin-bottom: 10px;
-}
-
-.chapter-name {
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 1.4;
-    margin-bottom: 16px;
-}
-
-.chapter-options {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.pdf-button {
-    display: inline-block;
-    padding: 10px 14px;
-    background: #e8f0fe;
-    color: #0b4db8;
-    text-decoration: none;
-    border: none;
-    border-radius: 9px;
-    font-weight: 600;
-    transition: 0.2s;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.pdf-button:hover {
-    background: #dbeafe;
-    transform: translateY(-1px);
-}
-
-.admin-add-button {
-    display: inline-block;
-    padding: 10px 14px;
-    background: #0b4db8;
-    color: white;
-    text-decoration: none;
-    border: none;
-    border-radius: 9px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.admin-add-button:hover {
-    background: #0a44a3;
-}
-
-.saved-pdfs {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 14px;
-}
-
-.saved-pdf {
-    display: block;
-    padding: 10px 12px;
-    background: #f0f7ff;
-    color: #0b4db8;
-    border-radius: 9px;
-    text-decoration: none;
-    overflow-wrap: anywhere;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.saved-pdf:hover {
-    background: #dbeafe;
-}
-
-.pdf-status {
-    margin-top: 12px;
-    color: #6b7280;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-body.dark-mode {
-    background: #111827;
-    color: #f9fafb;
-}
-
-body.dark-mode .header {
-    background: #1f2937;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.35);
-}
-
-body.dark-mode .logo-text h1 {
-    color: #60a5fa;
-}
-
-body.dark-mode .logo-text span {
-    color: #9ca3af;
-}
-
-body.dark-mode .search-box {
-    background: #374151;
-    border-color: #4b5563;
-}
-
-body.dark-mode .search-box span {
-    color: #d1d5db;
-}
-
-body.dark-mode .search-box input {
-    color: white;
-}
-
-body.dark-mode .search-box input::placeholder {
-    color: #9ca3af;
-}
-
-body.dark-mode .icon {
-    background: #374151;
-}
-
-body.dark-mode .icon:hover {
-    background: #4b5563;
-}
-
-body.dark-mode .profile {
-    border-color: #4b5563;
-}
-
-body.dark-mode .chapter-title {
-    color: #60a5fa;
-}
-
-body.dark-mode .chapter-card {
-    background: #1f2937;
-    border-left-color: #3b82f6;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-
-body.dark-mode .chapter-card:hover {
-    background: #263449;
-}
-
-body.dark-mode .chapter-number {
-    color: #60a5fa;
-}
-
-body.dark-mode .chapter-name {
-    color: #f9fafb;
-}
-
-body.dark-mode .pdf-button {
-    background: #263b5c;
-    color: #93c5fd;
-}
-
-body.dark-mode .pdf-button:hover {
-    background: #334b70;
-}
-
-body.dark-mode .saved-pdf {
-    background: #263b5c;
-    color: #93c5fd;
-}
-
-body.dark-mode .admin-add-button {
-    background: #2563eb;
-    color: white;
-}
-
-body.dark-mode .pdf-status {
-    color: #9ca3af;
-}
-
-@media(max-width: 700px) {
-    .header {
-        flex-wrap: wrap;
-    }
-
-    .search-box {
-        order: 3;
-        width: 100%;
-        max-width: none;
-    }
-
-    .main {
-        padding: 18px;
-    }
-
-    .subject-header {
-        padding: 22px;
-    }
-
-    .subject-header h1 {
-        font-size: 24px;
-    }
-
-    .chapter-options {
-        flex-direction: column;
-    }
-
-    .pdf-button,
-    .admin-add-button {
-        text-align: center;
-        width: 100%;
-    }
-}
-</style>
-</head>
-
-<body>
-
-<div class="header">
-    <div class="logo">
-        <div class="logo-icon">📘</div>
-        <div class="logo-text">
-            <h1>My BITM</h1>
-            <span>Notes</span>
-        </div>
-    </div>
-
-    <div class="search-box">
-        <span>🔍</span>
-        <input type="text" id="searchInput" placeholder="Search chapters...">
-    </div>
-
-    <div class="actions">
-        <a href="profile.html">
-            <img src="profile.jpg" class="profile" alt="Profile">
-        </a>
-        <div class="icon" title="Notifications">🔔</div>
-        <div class="icon" id="darkModeButton" title="Dark Mode">🌙</div>
-    </div>
-</div>
-
-<div class="main">
-    <a href="index.html" class="back-button">← Back to My BITM</a>
-
-    <div class="subject-header">
-        <h1 id="subjectName">Subject</h1>
-        <p id="semesterName">Semester • BITM</p>
-    </div>
-
-    <div class="chapter-title">Chapters</div>
-    <div class="chapter-grid" id="chapterGrid"></div>
-    <p class="pdf-status" id="pageStatus" role="status"></p>
-</div>
-
 <script type="module">
-import { initializeApp } from
-    "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import {
-    getFirestore,
-    collection,
-    getDocs,
-    addDoc,
-    serverTimestamp
-} from
-    "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-
+    getFirestore, collection, getDocs, addDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import {
-    getAuth,
-    onAuthStateChanged
-} from
-    "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-
-/* FIREBASE CONFIGURATION */
+    getAuth, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53rUofsTN2M",
+    apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53RuoFsTN2M",
     authDomain: "my-bitm-notes.firebaseapp.com",
     projectId: "my-bitm-notes",
     storageBucket: "my-bitm-notes.firebasestorage.app",
@@ -469,157 +18,73 @@ const firebaseConfig = {
     measurementId: "G-RYR93GQ15R"
 };
 
-/* YOUR AUTHORIZED ADMIN UID */
-
 const ADMIN_UID = "DL3vp2hyOXeIgAyd3lvkK7vIF1z1";
-
-/* INITIALIZE FIREBASE */
+const UPLOAD_FUNCTION_URL =
+    "https://alwoegbhtotladrtaouk.supabase.co/functions/v1/upload-pdf";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-/* GET SUBJECT FROM URL */
-
 const params = new URLSearchParams(window.location.search);
 const semester = params.get("semester");
 const subjectIndex = params.get("subject");
 
-/* SUBJECT NAMES */
-
 const subjects = {
-    1: [
-        "Foundation of Information Technology",
-        "C Programming",
-        "English 1",
-        "Foundation of Business Management",
-        "Basic Mathematics",
-        "Assignment"
-    ],
-    2: [
-        "Digital Logic",
-        "Java Programming",
-        "Discrete Structure",
-        "Business Communication",
-        "OBHRM",
-        "Assignment"
-    ],
-    3: [
-        "Microprocessor And Computer Architecture",
-        "Web Technology 1",
-        "Data Structure And Algorithms",
-        "Financial Accounting",
-        "Business Statistics",
-        "Assignment"
-    ],
-    4: [
-        "Web Technology",
-        "Database Management System",
-        "Business Data Communication And Networking",
-        "Operating System",
-        "Economics For Business",
-        "Cost And Management Accounting"
-    ],
-    5: [
-        "Software Design And Development",
-        "Programming With Python",
-        "Information Security",
-        "Fundamentals Of Marketing",
-        "Artificial Intelligence",
-        "Assignment"
-    ],
-    6: [
-        "Business Information System",
-        "IT Ethics And Cybersecurity",
-        "Fundamentals of Corporate Finance",
-        "Business Environment",
-        "Business Research Method",
-        "Assignment"
-    ],
-    7: [
-        "E-commerce And Internet Marketing",
-        "Sociology For Business Management",
-        "Operations Management",
-        "Strategic Management",
-        "Internship",
-        "Project/Assignment"
-    ],
-    8: [
-        "IT Entrepreneurship And Management",
-        "Business Intelligence",
-        "Digital Economy",
-        "Project",
-        "Project",
-        "Project"
-    ]
+    1: ["Foundation of Information Technology", "C Programming", "English 1",
+        "Foundation of Business Management", "Basic Mathematics", "Assignment"],
+    2: ["Digital Logic", "Java Programming", "Discrete Structure",
+        "Business Communication", "OBHRM", "Assignment"],
+    3: ["Microprocessor And Computer Architecture", "Web Technology 1",
+        "Data Structure And Algorithms", "Financial Accounting",
+        "Business Statistics", "Assignment"],
+    4: ["Web Technology", "Database Management System",
+        "Business Data Communication And Networking", "Operating System",
+        "Economics For Business", "Cost And Management Accounting"],
+    5: ["Software Design And Development", "Programming With Python",
+        "Information Security", "Fundamentals Of Marketing",
+        "Artificial Intelligence", "Assignment"],
+    6: ["Business Information System", "IT Ethics And Cybersecurity",
+        "Fundamentals of Corporate Finance", "Business Environment",
+        "Business Research Method", "Assignment"],
+    7: ["E-commerce And Internet Marketing", "Sociology For Business Management",
+        "Operations Management", "Strategic Management", "Internship",
+        "Project/Assignment"],
+    8: ["IT Entrepreneurship And Management", "Business Intelligence",
+        "Digital Economy", "Project", "Project", "Project"]
 };
 
-/* CHAPTER LISTS */
-
 const chapters = {
-    "1-1": [
-        "Introduction to Programming Language",
-        "Basic Elements of C",
-        "Data Input and Output",
-        "Operators",
-        "Control Statements",
-        "Functions, Arrays and Strings",
-        "Pointers",
-        "Structures and Unions",
-        "Preprocessor in C",
-        "File Handling",
-        "Graphics Programming in C"
-    ],
-    "1-2": [
-        "Cross-Cultural Communication",
-        "Mass Media, Information, and Technology",
-        "Issues of Ethics",
-        "Tradition, Progress, and Development",
-        "Self, Reflection, and Experience",
-        "Observation, Change, and Description"
-    ],
-    "1-3": [
-        "Introduction to Business and Management",
-        "Planning, Decision Making and Problem Solving",
-        "Organizing",
-        "Leadership",
-        "Controlling",
-        "Ethics, Social Responsibility and Contemporary Issues"
-    ],
-    "1-4": [
-        "Set Theory and Real Number",
-        "Complex Number",
-        "Function, Limit and Continuity",
-        "Differential and Its Application",
-        "Integration and Its Application",
-        "Differential Equation",
-        "Vector",
-        "Matrix and Determinant",
-        "Least Square Method"
-    ],
-    "1-0": [
-        "IT Computer Fundamentals",
-        "Hardware and Peripherals",
-        "Software",
-        "Fundamental Concepts of Data Management",
-        "Networking and Internet",
-        "Multimedia",
-        "Introduction to IT and Information Systems",
-        "Cybersecurity",
-        "IT Ethics",
-        "Emerging Technologies and Digital Transformation"
-    ]
+    "1-1": ["Introduction to Programming Language", "Basic Elements of C",
+        "Data Input and Output", "Operators", "Control Statements",
+        "Functions, Arrays and Strings", "Pointers", "Structures and Unions",
+        "Preprocessor in C", "File Handling", "Graphics Programming in C"],
+    "1-2": ["Cross-Cultural Communication", "Mass Media, Information, and Technology",
+        "Issues of Ethics", "Tradition, Progress, and Development",
+        "Self, Reflection, and Experience", "Observation, Change, and Description"],
+    "1-3": ["Introduction to Business and Management",
+        "Planning, Decision Making and Problem Solving", "Organizing",
+        "Leadership", "Controlling",
+        "Ethics, Social Responsibility and Contemporary Issues"],
+    "1-4": ["Set Theory and Real Number", "Complex Number",
+        "Function, Limit and Continuity", "Differential and Its Application",
+        "Integration and Its Application", "Differential Equation", "Vector",
+        "Matrix and Determinant", "Least Square Method"],
+    "1-0": ["IT Computer Fundamentals", "Hardware and Peripherals",
+        "Software", "Fundamental Concepts of Data Management",
+        "Networking and Internet", "Multimedia",
+        "Introduction to IT and Information Systems", "Cybersecurity",
+        "IT Ethics", "Emerging Technologies and Digital Transformation"]
 };
 
 const subjectName = subjects[semester]?.[subjectIndex];
 const chapterGrid = document.getElementById("chapterGrid");
 const pageStatus = document.getElementById("pageStatus");
 const searchInput = document.getElementById("searchInput");
+const darkModeButton = document.getElementById("darkModeButton");
 
 let isAdmin = false;
 let savedNotes = [];
-
-/* DISPLAY SUBJECT INFORMATION */
 
 if (!subjectName) {
     document.getElementById("subjectName").textContent = "Subject not found";
@@ -632,20 +97,30 @@ if (!subjectName) {
         `Semester ${semester} • BITM`;
 }
 
-/* VALIDATE PDF LINKS */
+/* ACCEPT OLD GOOGLE DRIVE LINKS AND NEW SUPABASE PDF LINKS */
 
 function isValidPdfLink(value) {
     try {
         const url = new URL(value);
-        return url.protocol === "https:" &&
-            (url.hostname === "drive.google.com" ||
-             url.hostname === "docs.google.com");
+
+        if (url.protocol !== "https:") return false;
+
+        const isGoogleDrive =
+            url.hostname === "drive.google.com" ||
+            url.hostname === "docs.google.com";
+
+        const isSupabasePdf =
+            url.hostname === "alwoegbhtotladrtaouk.supabase.co" &&
+            url.pathname.startsWith(
+                "/storage/v1/object/public/bitm-pdfs/"
+            ) &&
+            url.pathname.toLowerCase().endsWith(".pdf");
+
+        return isGoogleDrive || isSupabasePdf;
     } catch {
         return false;
     }
 }
-
-/* FIND SAVED PDFS FOR A CHAPTER */
 
 function getChapterNotes(chapterNumber) {
     return savedNotes.filter(note =>
@@ -654,8 +129,6 @@ function getChapterNotes(chapterNumber) {
         note.chapter === chapterNumber
     );
 }
-
-/* CREATE A SAFE PDF LINK */
 
 function makePdfLink(note) {
     const link = document.createElement("a");
@@ -667,7 +140,7 @@ function makePdfLink(note) {
     return link;
 }
 
-/* ADD PDF TO A CHAPTER */
+/* UPLOAD A PDF DIRECTLY FROM YOUR COMPUTER */
 
 async function addPdfToChapter(chapterNumber) {
     if (!auth.currentUser || auth.currentUser.uid !== ADMIN_UID) {
@@ -692,18 +165,59 @@ async function addPdfToChapter(chapterNumber) {
         return;
     }
 
-    const pdfLink = prompt("Paste the Google Drive PDF link:");
-    if (!pdfLink || !pdfLink.trim()) return;
+    const file = await new Promise(resolve => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = ".pdf,application/pdf";
 
-    const cleanLink = pdfLink.trim();
+        input.addEventListener("change", () => {
+            resolve(input.files?.[0] || null);
+        }, { once: true });
 
-    if (!isValidPdfLink(cleanLink)) {
-        alert("Please enter a valid HTTPS Google Drive link.");
+        input.click();
+    });
+
+    if (!file) return;
+
+    if (
+        file.type !== "application/pdf" ||
+        !file.name.toLowerCase().endsWith(".pdf")
+    ) {
+        alert("Please select a PDF file.");
+        return;
+    }
+
+    if (file.size === 0 || file.size > 50 * 1024 * 1024) {
+        alert("The PDF must be smaller than 50 MB.");
         return;
     }
 
     try {
-        pageStatus.textContent = "Saving PDF...";
+        pageStatus.textContent = "Uploading PDF... Please wait.";
+
+        const token = await auth.currentUser.getIdToken();
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await fetch(UPLOAD_FUNCTION_URL, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success || !result.pdfLink) {
+            throw new Error(result.error || "PDF upload failed.");
+        }
+
+        if (!isValidPdfLink(result.pdfLink)) {
+            throw new Error("The storage service returned an invalid PDF link.");
+        }
+
+        pageStatus.textContent = "Saving PDF information...";
 
         await addDoc(collection(db, "notes"), {
             semester: `Semester ${semester}`,
@@ -711,20 +225,20 @@ async function addPdfToChapter(chapterNumber) {
             chapter: chapterNumber,
             type: cleanType,
             title: title.trim(),
-            pdfLink: cleanLink,
+            pdfLink: result.pdfLink,
+            storagePath: result.path || "",
             createdAt: serverTimestamp()
         });
 
         await loadNotes();
-        pageStatus.textContent = "PDF saved successfully.";
+        pageStatus.textContent = "PDF uploaded and saved successfully!";
     } catch (error) {
-        console.error(error);
-        pageStatus.textContent =
-            "Could not save PDF: " + error.message;
+        console.error("PDF upload error:", error);
+        pageStatus.textContent = "Upload failed: " + error.message;
     }
 }
 
-/* DISPLAY CHAPTERS AND THEIR PDFS */
+/* DISPLAY CHAPTERS AND PDF BUTTONS */
 
 function renderChapters() {
     chapterGrid.replaceChildren();
@@ -764,57 +278,46 @@ function renderChapters() {
 
         const chapterNotes = getChapterNotes(chapterNumber);
 
-        /* SYLLABUS BUTTON */
+        function createTypeButton(type, label, emptyMessage) {
+            const button = document.createElement("a");
+            button.className = "pdf-button";
+            button.textContent = label;
 
-        const syllabus = document.createElement("a");
-        syllabus.className = "pdf-button";
-        syllabus.textContent = "📚 Syllabus";
+            const note = chapterNotes.find(item => item.type === type);
 
-        const syllabusNote =
-            chapterNotes.find(note => note.type === "Syllabus");
+            if (note && isValidPdfLink(note.pdfLink)) {
+                button.href = note.pdfLink;
+                button.target = "_blank";
+                button.rel = "noopener noreferrer";
+            } else {
+                button.href = "#";
+                button.addEventListener("click", event => {
+                    event.preventDefault();
+                    alert(emptyMessage);
+                });
+            }
 
-        if (syllabusNote && isValidPdfLink(syllabusNote.pdfLink)) {
-            syllabus.href = syllabusNote.pdfLink;
-            syllabus.target = "_blank";
-            syllabus.rel = "noopener noreferrer";
-        } else {
-            syllabus.href = "#";
-            syllabus.addEventListener("click", event => {
-                event.preventDefault();
-                alert("No syllabus PDF has been added for this chapter yet.");
-            });
+            return button;
         }
 
-        /* ASSIGNMENT BUTTON */
-
-        const assignment = document.createElement("a");
-        assignment.className = "pdf-button";
-        assignment.textContent = "📝 Assignment";
-
-        const assignmentNote =
-            chapterNotes.find(note => note.type === "Assignment");
-
-        if (assignmentNote && isValidPdfLink(assignmentNote.pdfLink)) {
-            assignment.href = assignmentNote.pdfLink;
-            assignment.target = "_blank";
-            assignment.rel = "noopener noreferrer";
-        } else {
-            assignment.href = "#";
-            assignment.addEventListener("click", event => {
-                event.preventDefault();
-                alert("No assignment PDF has been added for this chapter yet.");
-            });
-        }
-
-        options.append(syllabus, assignment);
-
-        /* ADMIN-ONLY ADD PDF BUTTON */
+        options.append(
+            createTypeButton(
+                "Syllabus",
+                "📚 Syllabus",
+                "No syllabus PDF has been added for this chapter yet."
+            ),
+            createTypeButton(
+                "Assignment",
+                "📝 Assignment",
+                "No assignment PDF has been added for this chapter yet."
+            )
+        );
 
         if (isAdmin) {
             const addButton = document.createElement("button");
             addButton.type = "button";
             addButton.className = "admin-add-button";
-            addButton.textContent = "＋ Add PDF";
+            addButton.textContent = "＋ Upload PDF";
 
             addButton.addEventListener("click", () => {
                 addPdfToChapter(chapterNumber);
@@ -822,8 +325,6 @@ function renderChapters() {
 
             options.appendChild(addButton);
         }
-
-        /* OTHER SAVED PDFS */
 
         const pdfContainer = document.createElement("div");
         pdfContainer.className = "saved-pdfs";
@@ -845,7 +346,7 @@ function renderChapters() {
     applySearch();
 }
 
-/* LOAD PDF LINKS FROM FIRESTORE */
+/* LOAD EXISTING AND NEW PDF RECORDS */
 
 async function loadNotes() {
     pageStatus.textContent = "Loading saved PDFs...";
@@ -853,22 +354,21 @@ async function loadNotes() {
     try {
         const snapshot = await getDocs(collection(db, "notes"));
 
-        savedNotes = snapshot.docs.map(documentSnapshot => ({
-            id: documentSnapshot.id,
-            ...documentSnapshot.data()
+        savedNotes = snapshot.docs.map(item => ({
+            id: item.id,
+            ...item.data()
         }));
 
         renderChapters();
         pageStatus.textContent = "";
     } catch (error) {
         console.error("Could not load PDFs:", error);
-
         pageStatus.textContent =
-            "Could not load PDFs. Check your Firestore rules and internet connection.";
+            "Could not load PDFs. Check Firestore rules and your internet connection.";
     }
 }
 
-/* SEARCH CHAPTERS */
+/* SEARCH */
 
 function applySearch() {
     const search = searchInput.value.toLowerCase();
@@ -881,9 +381,7 @@ function applySearch() {
 
 searchInput.addEventListener("input", applySearch);
 
-/* DARK MODE */
-
-const darkModeButton = document.getElementById("darkModeButton");
+/* DARK MODE — KEEP THE EXISTING SHARED SETTING */
 
 if (localStorage.getItem("darkMode") === "enabled") {
     document.body.classList.add("dark-mode");
@@ -899,7 +397,7 @@ darkModeButton.addEventListener("click", () => {
     darkModeButton.textContent = enabled ? "☀️" : "🌙";
 });
 
-/* CHECK AUTHENTICATION */
+/* ADMIN LOGIN CHECK */
 
 onAuthStateChanged(auth, async user => {
     isAdmin = !!user && user.uid === ADMIN_UID;
@@ -907,5 +405,3 @@ onAuthStateChanged(auth, async user => {
 });
 </script>
 
-</body>
-</html>
