@@ -17,6 +17,7 @@
 body {
     background: #f4f7fb;
     color: #111827;
+    transition: 0.3s;
 }
 
 .header {
@@ -111,7 +112,6 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: 0.2s;
     font-size: 18px;
 }
 
@@ -167,7 +167,7 @@ body {
 
 .chapter-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 20px;
 }
 
@@ -206,36 +206,30 @@ body {
     flex-wrap: wrap;
 }
 
-.pdf-button {
+.pdf-button,
+.admin-add-button {
     display: inline-block;
     padding: 10px 14px;
-    background: #e8f0fe;
-    color: #0b4db8;
-    text-decoration: none;
     border: none;
     border-radius: 9px;
     font-weight: 600;
-    transition: 0.2s;
     cursor: pointer;
     font-size: 14px;
+    text-decoration: none;
+}
+
+.pdf-button {
+    background: #e8f0fe;
+    color: #0b4db8;
 }
 
 .pdf-button:hover {
     background: #dbeafe;
-    transform: translateY(-1px);
 }
 
 .admin-add-button {
-    display: inline-block;
-    padding: 10px 14px;
     background: #0b4db8;
     color: white;
-    text-decoration: none;
-    border: none;
-    border-radius: 9px;
-    font-weight: 600;
-    cursor: pointer;
-    font-size: 14px;
 }
 
 .admin-add-button:hover {
@@ -326,6 +320,7 @@ body.dark-mode .chapter-title {
 
 body.dark-mode .chapter-card {
     background: #1f2937;
+    color: #f9fafb;
     border-left-color: #3b82f6;
     box-shadow: 0 6px 18px rgba(0,0,0,0.25);
 }
@@ -342,18 +337,15 @@ body.dark-mode .chapter-name {
     color: #f9fafb;
 }
 
-body.dark-mode .pdf-button {
-    background: #263b5c;
-    color: #93c5fd;
-}
-
-body.dark-mode .pdf-button:hover {
-    background: #334b70;
-}
-
+body.dark-mode .pdf-button,
 body.dark-mode .saved-pdf {
     background: #263b5c;
     color: #93c5fd;
+}
+
+body.dark-mode .pdf-button:hover,
+body.dark-mode .saved-pdf:hover {
+    background: #334b70;
 }
 
 body.dark-mode .admin-add-button {
@@ -458,10 +450,10 @@ import {
 } from
     "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
-/* FIREBASE CONFIGURATION */
+/* USE THE SAME FIREBASE CONFIGURATION ON ALL PAGES */
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53RuoFsTN2M",
+    apiKey: "AIzaSyDi2MagVoXj6STUHR8gTCAp53RuoFsTN2M",
     authDomain: "my-bitm-notes.firebaseapp.com",
     projectId: "my-bitm-notes",
     storageBucket: "my-bitm-notes.firebasestorage.app",
@@ -478,7 +470,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-const params = new URLSearchParams(window.location.search);
+const params = new URLSearchParams(location.search);
 const semester = params.get("semester");
 const subjectIndex = params.get("subject");
 
@@ -615,29 +607,19 @@ const darkModeButton = document.getElementById("darkModeButton");
 let isAdmin = false;
 let savedNotes = [];
 
-/* DISPLAY SUBJECT INFORMATION */
-
-
-/* DISPLAY SUBJECT INFORMATION */
-
 if (!subjectName) {
-    document.getElementById("subjectName").textContent =
-        "Subject not found";
-
+    document.getElementById("subjectName").textContent = "Subject not found";
     document.getElementById("semesterName").textContent = "";
-
-    chapterGrid.textContent =
+    pageStatus.textContent =
         "Please return to the main page and select a subject.";
-
     throw new Error("Invalid semester or subject selection.");
 }
 
 document.getElementById("subjectName").textContent = subjectName;
-
 document.getElementById("semesterName").textContent =
     `Semester ${semester} • BITM`;
 
-/* ACCEPT EXISTING GOOGLE DRIVE LINKS AND NEW SUPABASE PDF LINKS */
+/* VALIDATE PDF LINKS */
 
 function isValidPdfLink(value) {
     try {
@@ -662,7 +644,7 @@ function isValidPdfLink(value) {
     }
 }
 
-/* FIND SAVED PDFS FOR A CHAPTER */
+/* FIND CONTENT FOR A CHAPTER */
 
 function getChapterNotes(chapterNumber) {
     return savedNotes.filter(note =>
@@ -671,8 +653,6 @@ function getChapterNotes(chapterNumber) {
         note.chapter === chapterNumber
     );
 }
-
-/* CREATE PDF LINK */
 
 function makePdfLink(note) {
     const link = document.createElement("a");
@@ -685,7 +665,7 @@ function makePdfLink(note) {
     return link;
 }
 
-/* UPLOAD PDF FROM COMPUTER */
+/* UPLOAD A PDF FROM YOUR DEVICE */
 
 async function addPdfToChapter(chapterNumber) {
     if (!auth.currentUser || auth.currentUser.uid !== ADMIN_UID) {
@@ -733,7 +713,7 @@ async function addPdfToChapter(chapterNumber) {
     }
 
     if (file.size === 0 || file.size > 50 * 1024 * 1024) {
-        alert("The PDF must be smaller than 50 MB.");
+        alert("Choose a PDF smaller than 50 MB.");
         return;
     }
 
@@ -783,36 +763,32 @@ async function addPdfToChapter(chapterNumber) {
     }
 }
 
-/* DISPLAY CHAPTERS AND PDF BUTTONS */
+/* DISPLAY CHAPTERS AND UPLOAD OPTIONS */
 
 function renderChapters() {
     chapterGrid.replaceChildren();
 
-    if (!subjectName) return;
-
     const chapterList = chapters[`${semester}-${subjectIndex}`];
 
-    if (!chapterList) {
-        const card = document.createElement("div");
-        card.className = "chapter-card";
+    // If a subject has no chapter list yet, provide a general upload card.
+    const hasChapterList = Array.isArray(chapterList);
+    const itemsToRender = hasChapterList
+        ? chapterList
+        : ["General Resources"];
 
-        const text = document.createElement("div");
-        text.className = "chapter-name";
-        text.textContent = "Chapters will be added soon.";
+    itemsToRender.forEach((chapter, index) => {
+        const chapterNumber = hasChapterList
+            ? `Chapter ${index + 1}`
+            : "General";
 
-        card.appendChild(text);
-        chapterGrid.appendChild(card);
-        return;
-    }
-
-    chapterList.forEach((chapter, index) => {
-        const chapterNumber = `Chapter ${index + 1}`;
         const card = document.createElement("div");
         card.className = "chapter-card";
 
         const number = document.createElement("div");
         number.className = "chapter-number";
-        number.textContent = chapterNumber;
+        number.textContent = hasChapterList
+            ? chapterNumber
+            : "Subject Resources";
 
         const name = document.createElement("div");
         name.className = "chapter-name";
@@ -828,9 +804,11 @@ function renderChapters() {
             button.className = "pdf-button";
             button.textContent = label;
 
-            const note = chapterNotes.find(item => item.type === type);
+            const note = chapterNotes.find(item =>
+                item.type === type && isValidPdfLink(item.pdfLink)
+            );
 
-            if (note && isValidPdfLink(note.pdfLink)) {
+            if (note) {
                 button.href = note.pdfLink;
                 button.target = "_blank";
                 button.rel = "noopener noreferrer";
@@ -849,15 +827,16 @@ function renderChapters() {
             createTypeButton(
                 "Syllabus",
                 "📚 Syllabus",
-                "No syllabus PDF has been added for this chapter yet."
+                "No syllabus PDF has been added yet."
             ),
             createTypeButton(
                 "Assignment",
                 "📝 Assignment",
-                "No assignment PDF has been added for this chapter yet."
+                "No assignment PDF has been added yet."
             )
         );
 
+        // Show the upload option only to the authorized admin.
         if (isAdmin) {
             const addButton = document.createElement("button");
             addButton.type = "button";
@@ -909,11 +888,11 @@ async function loadNotes() {
     } catch (error) {
         console.error("Could not load PDFs:", error);
         pageStatus.textContent =
-            "Could not load PDFs. Check Firestore rules and your internet connection.";
+            "Could not load PDFs. Check your Firestore rules and internet connection.";
     }
 }
 
-/* SEARCH CHAPTERS */
+/* SEARCH */
 
 function applySearch() {
     const search = searchInput.value.toLowerCase();
@@ -926,26 +905,32 @@ function applySearch() {
 
 searchInput.addEventListener("input", applySearch);
 
-/* DARK MODE */
+/* SHARED DARK MODE */
 
-if (localStorage.getItem("darkMode") === "enabled") {
-    document.body.classList.add("dark-mode");
-    darkModeButton.textContent = "☀️";
+function applyDarkMode() {
+    const enabled = localStorage.getItem("darkMode") === "enabled";
+    document.body.classList.toggle("dark-mode", enabled);
+    darkModeButton.textContent = enabled ? "☀️" : "🌙";
 }
 
-darkModeButton.addEventListener("click", () => {
-    document.body.classList.toggle("dark-mode");
+applyDarkMode();
 
-    const enabled = document.body.classList.contains("dark-mode");
+darkModeButton.addEventListener("click", () => {
+    const enabled = !document.body.classList.contains("dark-mode");
 
     localStorage.setItem("darkMode", enabled ? "enabled" : "disabled");
-    darkModeButton.textContent = enabled ? "☀️" : "🌙";
+    applyDarkMode();
 });
 
-/* AUTHENTICATION */
+/* ADMIN LOGIN STATUS */
 
 onAuthStateChanged(auth, async user => {
     isAdmin = !!user && user.uid === ADMIN_UID;
+
+    // Re-render immediately when admin status changes.
+    renderChapters();
+
+    // Then load the saved notes from Firestore.
     await loadNotes();
 });
 </script>
