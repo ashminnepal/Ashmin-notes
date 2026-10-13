@@ -618,10 +618,25 @@ let savedNotes = [];
 /* DISPLAY SUBJECT INFORMATION */
 
 if (!subjectName) {
-    document.getElementById("subjectName").textContent = "Subject not found";
-    document.getElementById("semesterName").textContent = "";
-    chapterGrid.textContent =
-        "Please return to the main page and select a subject.";
+    const subjectNameElement = document.getElementById("subjectName");
+    const semesterNameElement = document.getElementById("semesterName");
+
+    if (subjectNameElement) {
+        subjectNameElement.textContent = "Subject not found";
+    }
+
+    if (semesterNameElement) {
+        semesterNameElement.textContent = "";
+    }
+
+    if (chapterGrid) {
+        chapterGrid.textContent =
+            "Please return to the main page and select a subject.";
+    }
+
+    return;
+}
+
 } else {
     document.getElementById("subjectName").textContent = subjectName;
     document.getElementById("semesterName").textContent =
