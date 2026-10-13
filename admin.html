@@ -56,6 +56,7 @@
     }
 
     button:hover { opacity: 0.9; }
+    button:disabled { opacity: 0.6; cursor: wait; }
 
     .secondary { background: #e8f0ff; color: #0b4db8; }
     .danger { background: #b91c1c; }
@@ -172,18 +173,20 @@
           <input id="title" type="text"
                  placeholder="Enter title" required>
 
-          <label for="pdfLink">Google Drive PDF link</label>
-          <input id="pdfLink" type="url"
-                 placeholder="Paste your PDF link" required>
+          <label for="pdfFile">Select PDF from your device</label>
+          <input id="pdfFile" type="file"
+                 accept=".pdf,application/pdf" required>
 
-          <button type="submit">Save Content</button>
+          <p class="small">
+            Select a PDF file from your computer. It will be uploaded
+            to Supabase Storage, and its details will be saved in
+            your notes database. Maximum file size: 50 MB.
+          </p>
+
+          <button id="saveContentButton" type="submit">
+            Upload PDF and Save Content
+          </button>
         </form>
-
-        <p class="small">
-          Upload your PDF to Google Drive, set sharing to
-          anyone with the link can view, and paste the link here.
-          This form stores the link, not the PDF file itself.
-        </p>
       </div>
 
       <div class="card">
@@ -221,9 +224,8 @@
     } from
       "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-    // Same Firebase configuration as your working login.html.
     const firebaseConfig = {
-      apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53rUofsTN2M",
+      apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53RuoFsTN2M",
       authDomain: "my-bitm-notes.firebaseapp.com",
       projectId: "my-bitm-notes",
       storageBucket: "my-bitm-notes.firebasestorage.app",
@@ -234,6 +236,9 @@
 
     const ADMIN_EMAIL = "ashminnepal21@gmail.com".toLowerCase();
 
+    const SUPABASE_FUNCTION_URL =
+      "https://alwoegbhtotladrtaouk.supabase.co/functions/v1/upload-pdf";
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -242,6 +247,8 @@
     const dashboard = document.getElementById("dashboard");
     const message = document.getElementById("message");
     const notesList = document.getElementById("notesList");
+    const noteForm = document.getElementById("noteForm");
+    const saveButton = document.getElementById("saveContentButton");
 
     function showMessage(text, isError = false) {
       message.textContent = text;
@@ -347,43 +354,91 @@
       await loadNotes();
     });
 
-    // Save content links to Firestore.
-    document.getElementById("noteForm").addEventListener(
-      "submit", async (event) => {
-        event.preventDefault();
+    // Upload the selected PDF, then save its URL and details in Firestore.
+    noteForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-        const user = auth.currentUser;
-        if (!user || (user.email || "").toLowerCase() !== ADMIN_EMAIL) {
-          showMessage("You are not authorized to save content.", true);
-          return;
-        }
+      const user = auth.currentUser;
 
-        const pdfLink = document.getElementById("pdfLink").value.trim();
-
-        try {
-          const parsedLink = new URL(pdfLink);
-          if (parsedLink.protocol !== "https:") {
-            throw new Error("Use a valid HTTPS link.");
-          }
-
-          await addDoc(collection(db, "notes"), {
-            semester: document.getElementById("semester").value,
-            subject: document.getElementById("subject").value.trim(),
-            chapter: document.getElementById("chapter").value.trim(),
-            type: document.getElementById("type").value,
-            title: document.getElementById("title").value.trim(),
-            pdfLink: pdfLink,
-            createdAt: serverTimestamp()
-          });
-
-          document.getElementById("noteForm").reset();
-          showMessage("Content saved successfully.");
-          await loadNotes();
-        } catch (error) {
-          showMessage("Could not save content: " + error.message, true);
-        }
+      if (!user || (user.email || "").toLowerCase() !== ADMIN_EMAIL) {
+        showMessage("You are not authorized to upload content.", true);
+        return;
       }
-    );
+
+      const file = document.getElementById("pdfFile").files[0];
+
+      if (!file) {
+        showMessage("Please select a PDF file.", true);
+        return;
+      }
+
+      if (
+        file.type !== "application/pdf" ||
+        !file.name.toLowerCase().endsWith(".pdf")
+      ) {
+        showMessage("Please select a valid PDF file.", true);
+        return;
+      }
+
+      if (file.size === 0 || file.size > 50 * 1024 * 1024) {
+        showMessage("The PDF must be smaller than 50 MB.", true);
+        return;
+      }
+
+      saveButton.disabled = true;
+      saveButton.textContent = "Uploading...";
+
+      try {
+        showMessage("Uploading PDF. Please wait...");
+
+        const token = await user.getIdToken();
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await fetch(SUPABASE_FUNCTION_URL, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success || !result.pdfLink) {
+          throw new Error(
+            result.error || `Upload failed (HTTP ${response.status}).`
+          );
+        }
+
+        showMessage("PDF uploaded. Saving its details...");
+
+        await addDoc(collection(db, "notes"), {
+          semester: document.getElementById("semester").value,
+          subject: document.getElementById("subject").value.trim(),
+          chapter: document.getElementById("chapter").value.trim(),
+          type: document.getElementById("type").value,
+          title: document.getElementById("title").value.trim(),
+          pdfLink: result.pdfLink,
+          storagePath: result.path,
+          createdAt: serverTimestamp()
+        });
+
+        noteForm.reset();
+        showMessage("PDF uploaded and content saved successfully!");
+        await loadNotes();
+
+      } catch (error) {
+        console.error("Content upload error:", error);
+        showMessage(
+          "Could not save content: " + error.message,
+          true
+        );
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "Upload PDF and Save Content";
+      }
+    });
 
     // Display saved content.
     async function loadNotes() {
@@ -420,12 +475,13 @@
           link.href = item.pdfLink;
           link.target = "_blank";
           link.rel = "noopener noreferrer";
-          link.textContent = "Open PDF link";
+          link.textContent = "Open PDF";
 
           div.append(heading, details, link);
           notesList.appendChild(div);
         });
       } catch (error) {
+        console.error("Load notes error:", error);
         notesList.textContent =
           "Could not load content: " + error.message;
       }
