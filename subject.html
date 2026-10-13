@@ -683,6 +683,7 @@ function makePdfLink(note) {
 
 /* UPLOAD PDF */
 
+
 async function addPdfToChapter(chapterNumber) {
     const user = auth.currentUser;
 
@@ -708,77 +709,74 @@ async function addPdfToChapter(chapterNumber) {
         return;
     }
 
-    const file = await new Promise(resolve => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = ".pdf,application/pdf";
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "application/pdf,.pdf";
 
-        input.addEventListener("change", () => {
-            resolve(input.files?.[0] || null);
-        }, { once: true });
+    input.onchange = async () => {
+        const file = input.files && input.files[0];
+        if (!file) return;
 
-        input.click();
-    });
-
-    if (!file) return;
-
-    if (
-        file.type !== "application/pdf" ||
-        !file.name.toLowerCase().endsWith(".pdf")
-    ) {
-        alert("Please select a PDF file.");
-        return;
-    }
-
-    if (file.size === 0 || file.size > 50 * 1024 * 1024) {
-        alert("Choose a PDF smaller than 50 MB.");
-        return;
-    }
-
-    try {
-        pageStatus.textContent = "Uploading PDF... Please wait.";
-
-        const token = await user.getIdToken();
-        const formData = new FormData();
-        formData.append("file", file);
-
-        const response = await fetch(UPLOAD_FUNCTION_URL, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-            body: formData
-        });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success || !result.pdfLink) {
-            throw new Error(result.error || "PDF upload failed.");
+        if (
+            file.type !== "application/pdf" ||
+            !file.name.toLowerCase().endsWith(".pdf")
+        ) {
+            alert("Please select a PDF file.");
+            return;
         }
 
-        if (!isValidPdfLink(result.pdfLink)) {
-            throw new Error("The storage service returned an invalid PDF link.");
+        if (file.size === 0 || file.size > 50 * 1024 * 1024) {
+            alert("Choose a PDF smaller than 50 MB.");
+            return;
         }
 
-        pageStatus.textContent = "Saving PDF information...";
+        try {
+            pageStatus.textContent = "Uploading PDF... Please wait.";
 
-        await addDoc(collection(db, "notes"), {
-            semester: `Semester ${semester}`,
-            subject: subjectName,
-            chapter: chapterNumber,
-            type: cleanType,
-            title: title.trim(),
-            pdfLink: result.pdfLink,
-            storagePath: result.path || "",
-            createdAt: serverTimestamp()
-        });
+            const token = await user.getIdToken();
+            const formData = new FormData();
+            formData.append("file", file);
 
-        await loadNotes();
-        pageStatus.textContent = "PDF uploaded and saved successfully!";
-    } catch (error) {
-        console.error("PDF upload error:", error);
-        pageStatus.textContent = "Upload failed: " + error.message;
-    }
+            const response = await fetch(UPLOAD_FUNCTION_URL, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success || !result.pdfLink) {
+                throw new Error(result.error || "PDF upload failed.");
+            }
+
+            if (!isValidPdfLink(result.pdfLink)) {
+                throw new Error("The storage service returned an invalid PDF link.");
+            }
+
+            pageStatus.textContent = "Saving PDF information...";
+
+            await addDoc(collection(db, "notes"), {
+                semester: `Semester ${semester}`,
+                subject: subjectName,
+                chapter: chapterNumber,
+                type: cleanType,
+                title: title.trim(),
+                pdfLink: result.pdfLink,
+                storagePath: result.path || "",
+                createdAt: serverTimestamp()
+            });
+
+            await loadNotes();
+            pageStatus.textContent = "PDF uploaded and saved successfully!";
+        } catch (error) {
+            console.error("PDF upload error:", error);
+            pageStatus.textContent = "Upload failed: " + error.message;
+        }
+    };
+
+    input.click();
 }
 
 /* RENDER CHAPTER CARDS */
