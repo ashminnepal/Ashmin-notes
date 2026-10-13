@@ -369,6 +369,28 @@ body.dark-mode .pdf-status {
     color: #9ca3af;
 }
 
+#pdf-upload-form input,
+#pdf-upload-form select {
+    font: inherit;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    background: white;
+    color: #111827;
+}
+
+#pdf-upload-form button {
+    border: none;
+    border-radius: 8px;
+    background: #0b4db8;
+    color: white;
+    font-weight: 600;
+}
+
+#pdf-upload-form button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 @media(max-width: 700px) {
     .header {
         flex-wrap: wrap;
@@ -440,9 +462,11 @@ body.dark-mode .pdf-status {
 
     <div class="chapter-title">Chapters</div>
     <div class="chapter-grid" id="chapterGrid"></div>
+
     <p class="pdf-status" id="pageStatus" role="status" aria-live="polite">
         Checking login status...
     </p>
+
     <div id="loginAction"></div>
 </div>
 
@@ -470,16 +494,17 @@ import {
 /* FIREBASE CONFIGURATION */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53rUofsTN2M",
-  authDomain: "my-bitm-notes.firebaseapp.com",
-  projectId: "my-bitm-notes",
-  storageBucket: "my-bitm-notes.firebasestorage.app",
-  messagingSenderId: "806626631556",
-  appId: "1:806626631556:web:3e1ff6d9474580fc5e47d1",
-  measurementId: "G-RYR93GQ15R"
+    apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53rUofsTN2M",
+    authDomain: "my-bitm-notes.firebaseapp.com",
+    projectId: "my-bitm-notes",
+    storageBucket: "my-bitm-notes.firebasestorage.app",
+    messagingSenderId: "806626631556",
+    appId: "1:806626631556:web:3e1ff6d9474580fc5e47d1",
+    measurementId: "G-RYR93GQ15R"
 };
 
 const ADMIN_UID = "DL3vp2hyOXeIgAyd3lvkK7vIF1z1";
+
 const UPLOAD_FUNCTION_URL =
     "https://alwoegbhtotladrtaouk.supabase.co/functions/v1/upload-pdf";
 
@@ -614,6 +639,7 @@ const chapters = {
 };
 
 const subjectName = subjects[semester]?.[subjectIndex];
+
 const chapterGrid = document.getElementById("chapterGrid");
 const pageStatus = document.getElementById("pageStatus");
 const loginAction = document.getElementById("loginAction");
@@ -623,15 +649,21 @@ const darkModeButton = document.getElementById("darkModeButton");
 let isAdmin = false;
 let savedNotes = [];
 
+/* CHECK SUBJECT */
+
 if (!subjectName) {
-    document.getElementById("subjectName").textContent = "Subject not found";
+    document.getElementById("subjectName").textContent =
+        "Subject not found";
     document.getElementById("semesterName").textContent = "";
+
     pageStatus.textContent =
         "Please return to the main page and select a subject.";
+
     throw new Error("Invalid semester or subject selection.");
 }
 
 document.getElementById("subjectName").textContent = subjectName;
+
 document.getElementById("semesterName").textContent =
     `Semester ${semester} • BITM`;
 
@@ -666,24 +698,104 @@ function getChapterNotes(chapterNumber) {
     return savedNotes.filter(note =>
         note.semester === `Semester ${semester}` &&
         note.subject === subjectName &&
-        note.chapter === chapterNumber
+        Number(note.chapter) === chapterNumber
     );
 }
 
 function makePdfLink(note) {
     const link = document.createElement("a");
+
     link.className = "saved-pdf";
     link.href = note.pdfLink;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
+
     link.textContent =
         `${note.type || "PDF"}: ${note.title || "Open PDF"}`;
+
     return link;
 }
 
-/* UPLOAD PDF */
+/* LOAD SAVED PDFS */
 
+async function loadNotes() {
+    try {
+        const snapshot = await getDocs(collection(db, "notes"));
 
+        savedNotes = snapshot.docs.map(documentSnapshot => ({
+            id: documentSnapshot.id,
+            ...documentSnapshot.data()
+        }));
+
+        renderChapters();
+    } catch (error) {
+        console.error("Error loading PDFs:", error);
+
+        pageStatus.textContent =
+            "Could not load PDFs: " + error.message;
+    }
+}
+
+/* RENDER CHAPTER CARDS */
+
+function renderChapters() {
+    chapterGrid.replaceChildren();
+
+    const chapterList =
+        chapters[`${semester}-${subjectIndex}`] || [];
+
+    chapterList.forEach((chapterName, index) => {
+        const chapterNumber = index + 1;
+
+        const card = document.createElement("div");
+        card.className = "chapter-card";
+
+        const number = document.createElement("div");
+        number.className = "chapter-number";
+        number.textContent = `Chapter ${chapterNumber}`;
+
+        const name = document.createElement("div");
+        name.className = "chapter-name";
+        name.textContent = chapterName;
+
+        const options = document.createElement("div");
+        options.className = "chapter-options";
+
+        const savedPdfs = document.createElement("div");
+        savedPdfs.className = "saved-pdfs";
+
+        getChapterNotes(chapterNumber).forEach(note => {
+            if (isValidPdfLink(note.pdfLink)) {
+                savedPdfs.appendChild(makePdfLink(note));
+            }
+        });
+
+        if (isAdmin) {
+            const addButton = document.createElement("button");
+
+            addButton.type = "button";
+            addButton.className = "admin-add-button";
+            addButton.textContent = "＋ Upload PDF";
+
+            addButton.addEventListener("click", () => {
+                addPdfToChapter(chapterNumber);
+            });
+
+            options.appendChild(addButton);
+        }
+
+        card.appendChild(number);
+        card.appendChild(name);
+        card.appendChild(options);
+        card.appendChild(savedPdfs);
+
+        chapterGrid.appendChild(card);
+    });
+
+    applySearch();
+}
+
+/* UPLOAD PDF FORM */
 
 async function addPdfToChapter(chapterNumber) {
     const user = auth.currentUser;
@@ -694,10 +806,12 @@ async function addPdfToChapter(chapterNumber) {
     }
 
     const oldForm = document.getElementById("pdf-upload-form");
+
     if (oldForm) oldForm.remove();
 
     const form = document.createElement("div");
     form.id = "pdf-upload-form";
+
     form.style.cssText = `
         position: fixed;
         inset: 0;
@@ -719,16 +833,16 @@ async function addPdfToChapter(chapterNumber) {
             max-width: 400px;
             box-sizing: border-box;
         ">
-            <h3 style="margin-top:0">Upload PDF</h3>
+            <h3 style="margin-bottom:18px">Upload PDF</h3>
 
             <label for="pdf-title">PDF Title</label>
             <input id="pdf-title" type="text"
                 placeholder="Enter PDF title"
-                style="width:100%;padding:10px;margin:8px 0 16px;box-sizing:border-box">
+                style="display:block;width:100%;padding:10px;margin:8px 0 16px">
 
             <label for="pdf-type">Content Type</label>
             <select id="pdf-type"
-                style="width:100%;padding:10px;margin:8px 0 16px;box-sizing:border-box">
+                style="display:block;width:100%;padding:10px;margin:8px 0 16px">
                 <option value="Syllabus">Syllabus</option>
                 <option value="Assignment">Assignment</option>
             </select>
@@ -740,12 +854,18 @@ async function addPdfToChapter(chapterNumber) {
 
             <div style="display:flex;gap:10px">
                 <button id="pdf-cancel" type="button"
-                    style="flex:1;padding:10px;cursor:pointer">Cancel</button>
+                    style="flex:1;padding:10px;cursor:pointer">
+                    Cancel
+                </button>
+
                 <button id="pdf-submit" type="button"
-                    style="flex:1;padding:10px;cursor:pointer">Upload</button>
+                    style="flex:1;padding:10px;cursor:pointer">
+                    Upload
+                </button>
             </div>
 
-            <p id="pdf-form-status" role="status"></p>
+            <p id="pdf-form-status" role="status"
+                style="margin-top:12px;overflow-wrap:anywhere"></p>
         </div>
     `;
 
@@ -757,7 +877,9 @@ async function addPdfToChapter(chapterNumber) {
     const submitButton = form.querySelector("#pdf-submit");
     const status = form.querySelector("#pdf-form-status");
 
-    form.querySelector("#pdf-cancel").onclick = () => form.remove();
+    form.querySelector("#pdf-cancel").onclick = () => {
+        form.remove();
+    };
 
     submitButton.onclick = async () => {
         const title = titleInput.value.trim();
@@ -784,7 +906,8 @@ async function addPdfToChapter(chapterNumber) {
         }
 
         if (file.size === 0 || file.size > 50 * 1024 * 1024) {
-            status.textContent = "Choose a PDF smaller than 50 MB.";
+            status.textContent =
+                "Choose a PDF smaller than 50 MB.";
             return;
         }
 
@@ -793,6 +916,7 @@ async function addPdfToChapter(chapterNumber) {
 
         try {
             const token = await user.getIdToken();
+
             const formData = new FormData();
             formData.append("file", file);
 
@@ -807,11 +931,15 @@ async function addPdfToChapter(chapterNumber) {
             const result = await response.json();
 
             if (!response.ok || !result.success || !result.pdfLink) {
-                throw new Error(result.error || "PDF upload failed.");
+                throw new Error(
+                    result.error || "PDF upload failed."
+                );
             }
 
             if (!isValidPdfLink(result.pdfLink)) {
-                throw new Error("The storage service returned an invalid PDF link.");
+                throw new Error(
+                    "The storage service returned an invalid PDF link."
+                );
             }
 
             status.textContent = "Saving PDF information...";
@@ -828,18 +956,23 @@ async function addPdfToChapter(chapterNumber) {
             });
 
             await loadNotes();
+
             form.remove();
-            pageStatus.textContent = "PDF uploaded and saved successfully!";
+
+            pageStatus.textContent =
+                "PDF uploaded and saved successfully!";
         } catch (error) {
             console.error("PDF upload error:", error);
-            status.textContent = "Upload failed: " + error.message;
+
+            status.textContent =
+                "Upload failed: " + error.message;
+
             submitButton.disabled = false;
         }
     };
 
     titleInput.focus();
 }
-
 
 /* SEARCH */
 
@@ -858,14 +991,17 @@ searchInput.addEventListener("input", applySearch);
 
 function applyDarkMode() {
     const enabled = localStorage.getItem("darkMode") === "enabled";
+
     document.body.classList.toggle("dark-mode", enabled);
+
     darkModeButton.textContent = enabled ? "☀️" : "🌙";
 }
 
 applyDarkMode();
 
 darkModeButton.addEventListener("click", () => {
-    const enabled = !document.body.classList.contains("dark-mode");
+    const enabled =
+        !document.body.classList.contains("dark-mode");
 
     localStorage.setItem(
         "darkMode",
@@ -875,12 +1011,13 @@ darkModeButton.addEventListener("click", () => {
     applyDarkMode();
 });
 
-/* FIREBASE LOGIN AND ADMIN STATUS */
+/* LOGIN LINK */
 
 function showLoginLink() {
     loginAction.replaceChildren();
 
     const link = document.createElement("a");
+
     link.className = "login-link";
     link.href = "login.html";
     link.textContent = "Go to Login";
@@ -888,15 +1025,12 @@ function showLoginLink() {
     loginAction.appendChild(link);
 }
 
+/* FIREBASE LOGIN AND ADMIN STATUS */
+
 async function startPage() {
     pageStatus.textContent = "Checking Firebase login...";
 
     try {
-        /*
-         * This sets browser-local persistence for this page.
-         * The login page must also successfully sign in to
-         * the same Firebase project.
-         */
         await setPersistence(auth, browserLocalPersistence);
 
         onAuthStateChanged(auth, async user => {
@@ -909,11 +1043,11 @@ async function startPage() {
             if (!user) {
                 pageStatus.textContent =
                     "Not logged in. Please sign in first.";
+
                 showLoginLink();
             } else if (!isAdmin) {
                 pageStatus.textContent =
-                    "Signed in, but this account is not the authorized admin. " +
-                    "Current UID: " + user.uid;
+                    "Signed in, but this account is not the authorized admin.";
             } else {
                 pageStatus.textContent =
                     "Admin recognized. Upload buttons should be visible.";
@@ -921,29 +1055,30 @@ async function startPage() {
 
             await loadNotes();
 
-            /*
-             * Keep the login status visible after notes load.
-             */
             if (!user) {
                 pageStatus.textContent =
                     "Not logged in. Please sign in first.";
+
                 showLoginLink();
             } else if (!isAdmin) {
                 pageStatus.textContent =
-                    "Signed in, but this account is not the authorized admin. " +
-                    "Current UID: " + user.uid;
+                    "Signed in, but this account is not the authorized admin.";
             } else {
                 pageStatus.textContent =
                     "Admin recognized. Upload buttons should be visible.";
+
                 renderChapters();
             }
         });
     } catch (error) {
         console.error("Firebase authentication error:", error);
+
         pageStatus.textContent =
             "Firebase authentication error: " + error.message;
     }
 }
+
+/* INITIALIZE PAGE */
 
 renderChapters();
 startPage();
