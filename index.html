@@ -930,8 +930,12 @@ function updateButtons(user) {
 onAuthStateChanged(auth, user => {
     authReady = true;
     updateButtons(user);
-});
 
+    console.log(
+        "Firebase login state:",
+        user ? user.email : "Not logged in"
+    );
+});
 window.handleAuthClick = async function() {
     if (!authReady) return;
 
