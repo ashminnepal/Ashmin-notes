@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -127,7 +127,7 @@ body{
     background:#e8f0fe;
 }
 
-/* LOGIN / LOGOUT */
+/* SINGLE LOGIN / LOGOUT BUTTON */
 
 .auth-btn{
     padding:10px 17px;
@@ -149,12 +149,6 @@ body{
 .auth-btn:disabled{
     opacity:0.6;
     cursor:wait;
-}
-
-/* MOBILE NAVIGATION IS HIDDEN ON PC */
-
-.mobile-bottom-nav{
-    display:none;
 }
 
 /* LAYOUT */
@@ -380,7 +374,7 @@ body.dark-mode .chapter-name{
     color:#f9fafb;
 }
 
-/* KEEP ORIGINAL TABLET LAYOUT */
+/* MOBILE */
 
 @media(max-width:900px){
     .container{
@@ -402,49 +396,35 @@ body.dark-mode .chapter-name{
     }
 }
 
-/* MOBILE-ONLY DESIGN */
-
 @media(max-width:700px){
-
-    /* Mobile header: logo and profile at top */
-
     .header{
-        display:grid;
-        grid-template-columns:minmax(0,1fr) auto;
-        gap:12px;
+        flex-wrap:wrap;
+        gap:14px;
         padding:12px 14px;
     }
 
     .logo{
         min-width:0;
-        gap:8px;
-    }
-
-    .logo-icon{
-        width:38px;
-        height:38px;
-        font-size:21px;
-        flex-shrink:0;
+        flex:1;
     }
 
     .logo-text h1{
         font-size:19px;
     }
 
-    .logo-text span{
-        font-size:13px;
-    }
-
     .actions{
-        gap:7px;
+        gap:8px;
     }
 
-    /* Hide desktop-only login, notification and settings */
+    .search-box{
+        order:3;
+        width:100%;
+        max-width:none;
+    }
 
-    .header .auth-btn,
-    .header .notification-icon,
-    .header .settings-icon{
-        display:none;
+    .auth-btn{
+        padding:9px 12px;
+        font-size:13px;
     }
 
     .profile{
@@ -453,208 +433,40 @@ body.dark-mode .chapter-name{
     }
 
     .icon{
-        width:34px;
-        height:34px;
-        font-size:17px;
+        width:36px;
+        height:36px;
     }
-
-    /* Search occupies a separate row */
-
-    .search-box{
-        grid-column:1 / -1;
-        order:initial;
-        width:100%;
-        max-width:none;
-        padding:11px 15px;
-        gap:10px;
-    }
-
-    .search-box input{
-        font-size:14px;
-    }
-
-    /* Hide desktop sidebar only on mobile */
-
-    .container{
-        display:block;
-        min-height:auto;
-    }
-
-    .sidebar{
-        display:none;
-    }
-
-    /* Main content */
 
     .main{
-        padding:15px 12px 24px;
+        padding:18px;
     }
 
     .semester-section{
-        padding:17px 14px;
-        border-radius:17px;
-        margin-bottom:22px;
+        padding:18px;
+    }
+}
+
+@media(max-width:420px){
+    .actions{
+        gap:5px;
     }
 
-    .semester-section h2{
+    .auth-btn{
+        padding:8px 10px;
+    }
+
+    .logo-icon{
+        width:38px;
+        height:38px;
         font-size:21px;
-        margin-bottom:15px;
+    }
+
+    .logo{
+        gap:8px;
     }
 
     .semester-buttons{
         grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:10px;
-    }
-
-    .semester-buttons button{
-        padding:12px 6px;
-        border-radius:11px;
-        font-size:13px;
-    }
-
-    .chapter-title{
-        font-size:21px;
-        margin-bottom:16px;
-    }
-
-    .chapter-grid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:12px;
-    }
-
-    .chapter-card{
-        padding:14px 12px;
-        border-radius:13px;
-        border-left-width:4px;
-        min-width:0;
-    }
-
-    .chapter-number{
-        font-size:12px;
-        margin-bottom:7px;
-    }
-
-    .chapter-name{
-        font-size:14px;
-        line-height:1.4;
-        overflow-wrap:anywhere;
-    }
-
-    /* Fixed Facebook-style bottom navigation */
-
-    body{
-        padding-bottom:76px;
-    }
-
-    .mobile-bottom-nav{
-        display:flex;
-        align-items:stretch;
-        justify-content:space-around;
-        position:fixed;
-        left:0;
-        right:0;
-        bottom:0;
-        width:100%;
-        min-height:64px;
-        padding:5px 2px calc(5px + env(safe-area-inset-bottom));
-        background:#ffffff;
-        border-top:1px solid #e5e7eb;
-        box-shadow:0 -3px 12px rgba(0,0,0,0.08);
-        z-index:1000;
-    }
-
-    .mobile-nav-item{
-        flex:1;
-        min-width:0;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        gap:4px;
-        padding:5px 1px;
-        border:none;
-        border-radius:8px;
-        background:transparent;
-        color:#6b7280;
-        cursor:pointer;
-        font-size:10px;
-        font-weight:600;
-        white-space:nowrap;
-    }
-
-    .mobile-nav-item .nav-icon{
-        font-size:19px;
-        line-height:1.2;
-    }
-
-    .mobile-nav-item.active{
-        color:#0b4db8;
-    }
-
-    .mobile-nav-item.active .nav-icon{
-        transform:translateY(-1px);
-    }
-
-    .mobile-nav-item:active{
-        background:#e8f0fe;
-    }
-
-    /* Dark mode for mobile navigation */
-
-    body.dark-mode .mobile-bottom-nav{
-        background:#1f2937;
-        border-top-color:#374151;
-        box-shadow:0 -3px 12px rgba(0,0,0,0.3);
-    }
-
-    body.dark-mode .mobile-nav-item{
-        color:#d1d5db;
-    }
-
-    body.dark-mode .mobile-nav-item.active{
-        color:#60a5fa;
-    }
-
-    body.dark-mode .mobile-nav-item:active{
-        background:#374151;
-    }
-}
-
-/* SMALL PHONES */
-
-@media(max-width:360px){
-    .logo-text h1{
-        font-size:17px;
-    }
-
-    .actions{
-        gap:4px;
-    }
-
-    .profile{
-        width:33px;
-        height:33px;
-    }
-
-    .icon{
-        width:31px;
-        height:31px;
-    }
-
-    .mobile-nav-item{
-        font-size:9px;
-    }
-
-    .mobile-nav-item .nav-icon{
-        font-size:18px;
-    }
-
-    .chapter-card{
-        padding:12px 9px;
-    }
-
-    .chapter-name{
-        font-size:13px;
     }
 }
 </style>
@@ -692,8 +504,7 @@ if(localStorage.getItem("darkMode")==="enabled"){
 
     <div class="actions">
 
-        <!-- DESKTOP LOGIN / LOGOUT -->
-
+        <!-- SINGLE LOGIN / LOGOUT BUTTON -->
         <button
             id="authBtn"
             class="auth-btn"
@@ -710,26 +521,25 @@ if(localStorage.getItem("darkMode")==="enabled"){
             >
         </a>
 
-        <div class="icon notification-icon" title="Notifications">
+        <div class="icon" title="Notifications">
             🔔
         </div>
 
-        <button
+        <div
             class="icon"
             onclick="toggleDarkMode()"
             id="darkButton"
             title="Dark Mode"
-            type="button"
-        >🌙</button>
+        >🌙</div>
 
-        <div class="icon settings-icon" title="Settings">
+        <div class="icon" title="Settings">
             ⚙️
         </div>
 
     </div>
 </div>
 
-<!-- ORIGINAL LAYOUT -->
+<!-- LAYOUT -->
 
 <div class="container">
 
@@ -745,7 +555,7 @@ if(localStorage.getItem("darkMode")==="enabled"){
 
     <div class="main">
 
-        <div class="semester-section" id="semesterSection">
+        <div class="semester-section">
             <h2>Select Semester</h2>
 
             <div class="semester-buttons">
@@ -768,68 +578,6 @@ if(localStorage.getItem("darkMode")==="enabled"){
 
     </div>
 </div>
-
-<!-- MOBILE BOTTOM NAVIGATION -->
-
-<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
-
-    <button
-        type="button"
-        class="mobile-nav-item active"
-        onclick="mobileNavigate('home',this)"
-    >
-        <span class="nav-icon">🏠</span>
-        <span>Home</span>
-    </button>
-
-    <button
-        type="button"
-        class="mobile-nav-item"
-        onclick="mobileNavigate('dashboard',this)"
-    >
-        <span class="nav-icon">📊</span>
-        <span>Dashboard</span>
-    </button>
-
-    <button
-        type="button"
-        class="mobile-nav-item"
-        onclick="mobileNavigate('subjects',this)"
-    >
-        <span class="nav-icon">📚</span>
-        <span>Subjects</span>
-    </button>
-
-    <button
-        type="button"
-        class="mobile-nav-item"
-        onclick="mobileNavigate('notes',this)"
-    >
-        <span class="nav-icon">📝</span>
-        <span>Notes Hub</span>
-    </button>
-
-    <button
-        type="button"
-        class="mobile-nav-item"
-        onclick="mobileNavigate('resources',this)"
-    >
-        <span class="nav-icon">📂</span>
-        <span>Resources</span>
-    </button>
-
-    <button
-        type="button"
-        class="mobile-nav-item"
-        id="mobileAuthBtn"
-        onclick="handleAuthClick()"
-        disabled
-    >
-        <span class="nav-icon">🔐</span>
-        <span id="mobileAuthLabel">Checking...</span>
-    </button>
-
-</nav>
 
 <script>
 /* SUBJECTS */
@@ -937,30 +685,6 @@ function openSubject(sem,index){
         `subject.html?semester=${sem}&subject=${index}`;
 }
 
-/* MOBILE NAVIGATION */
-
-function mobileNavigate(section,btn){
-    document.querySelectorAll(".mobile-nav-item")
-        .forEach(item=>item.classList.remove("active"));
-
-    btn.classList.add("active");
-
-    if(section==="home"){
-        window.scrollTo({top:0,behavior:"smooth"});
-    }
-
-    if(section==="subjects"){
-        document.getElementById("semesterSection")
-            .scrollIntoView({behavior:"smooth",block:"start"});
-    }
-
-    /*
-      Dashboard, Notes Hub and Resources keep their existing
-      menu behavior. Their separate pages/content can be added
-      later without changing the desktop layout.
-    */
-}
-
 /* DARK MODE */
 
 function toggleDarkMode(){
@@ -1012,26 +736,15 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 const authBtn = document.getElementById("authBtn");
-const mobileAuthBtn = document.getElementById("mobileAuthBtn");
-const mobileAuthLabel = document.getElementById("mobileAuthLabel");
 
 let authReady = false;
 
 onAuthStateChanged(auth,(user)=>{
     authReady = true;
 
-    const label = user ? "Logout" : "Login";
-    const title = user
-        ? "Sign out of your account"
-        : "Sign in to your account";
-
     authBtn.disabled = false;
-    authBtn.textContent = label;
-    authBtn.title = title;
-
-    mobileAuthBtn.disabled = false;
-    mobileAuthLabel.textContent = label;
-    mobileAuthBtn.title = title;
+    authBtn.textContent = user ? "Logout" : "Login";
+    authBtn.title = user ? "Sign out of your account" : "Sign in to your account";
 });
 
 window.handleAuthClick = async function(){
@@ -1040,7 +753,6 @@ window.handleAuthClick = async function(){
     }
 
     authBtn.disabled = true;
-    mobileAuthBtn.disabled = true;
 
     try{
         if(auth.currentUser){
@@ -1052,17 +764,12 @@ window.handleAuthClick = async function(){
     }catch(error){
         console.error("Authentication action failed:",error);
         alert("Unable to log out. Please try again.");
-
-        const label = auth.currentUser ? "Logout" : "Login";
-
         authBtn.disabled = false;
-        authBtn.textContent = label;
-
-        mobileAuthBtn.disabled = false;
-        mobileAuthLabel.textContent = label;
+        authBtn.textContent = auth.currentUser ? "Logout" : "Login";
     }
 };
 </script>
 
 </body>
 </html>
+```
