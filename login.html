@@ -378,23 +378,39 @@ body {
     }
 }
 
+```css
 @media (max-width: 480px) {
     .header {
-        padding: 14px 18px;
+        padding: 12px 14px;
+        gap: 10px;
+    }
+
+    .logo {
+        flex: 1;
+        min-width: 0;
+        gap: 8px;
     }
 
     .logo-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 22px;
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+        flex-shrink: 0;
     }
 
     .logo h1 {
-        font-size: 18px;
+        font-size: 16px;
+        white-space: nowrap;
+    }
+
+    .logo p {
+        font-size: 12px;
     }
 
     .back-link {
         font-size: 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     .main {
@@ -410,6 +426,7 @@ body {
         font-size: 24px;
     }
 }
+
 </style>
 </head>
 
