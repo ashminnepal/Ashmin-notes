@@ -884,6 +884,7 @@ window.addEventListener("DOMContentLoaded",function(){
 
 <!-- FIREBASE LOGIN / LOGOUT -->
 
+
 <script type="module">
 import { initializeApp, getApps, getApp }
     from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
@@ -893,8 +894,6 @@ import {
     onAuthStateChanged,
     signOut
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-
-/* EXISTING FIREBASE PROJECT */
 
 const firebaseConfig = {
     apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53RuoFsTN2M",
@@ -919,50 +918,45 @@ const authButtons = [
 
 let authReady = false;
 
-/* KEEP PC AND MOBILE LOGIN BUTTONS IN SYNC */
+function updateButtons(user) {
+    authButtons.forEach(button => {
+        if (!button) return;
 
-function updateAuthButtons(user){
-    authButtons.forEach(button=>{
-        button.disabled = !authReady;
         button.textContent = user ? "Logout" : "Login";
-        button.title = user
-            ? "Sign out of your account"
-            : "Sign in to your account";
+        button.disabled = false;
     });
 }
 
-onAuthStateChanged(auth,(user)=>{
+onAuthStateChanged(auth, user => {
     authReady = true;
-    updateAuthButtons(user);
+    updateButtons(user);
 });
 
-/* LOGIN / LOGOUT ACTION */
+window.handleAuthClick = async function() {
+    if (!authReady) return;
 
-window.handleAuthClick = async function(){
-    if(!authReady){
-        return;
-    }
-
-    authButtons.forEach(button=>{
-        button.disabled = true;
+    authButtons.forEach(button => {
+        if (button) button.disabled = true;
     });
 
-    try{
-        if(auth.currentUser){
+    try {
+        if (auth.currentUser) {
             await signOut(auth);
-            window.location.href = "index.html";
-        }else{
+
+            updateButtons(null);
+
+            window.location.href = "login.html";
+        } else {
             window.location.href = "login.html";
         }
-    }catch(error){
-        console.error("Authentication action failed:",error);
-
+    } catch (error) {
+        console.error("Login/logout error:", error);
         alert("Unable to log out. Please try again.");
-
-        updateAuthButtons(auth.currentUser);
+        updateButtons(auth.currentUser);
     }
 };
 </script>
+
 
 </body>
 </html>
