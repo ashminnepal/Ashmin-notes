@@ -1,68 +1,723 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My BITM Notes - Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Login - My BITM Notes</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #f4f7fb;
+    color: #111827;
+    display: flex;
+    flex-direction: column;
+}
+
+/* TOP HEADER */
+
+.header {
+    width: 100%;
+    padding: 18px 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f7fbff;
+    border-bottom: 1px solid #e5edf8;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 46px;
+    height: 46px;
+    background: #0b4db8;
+    color: white;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+}
+
+.logo h1 {
+    font-size: 21px;
+    color: #0b4db8;
+    line-height: 1.2;
+}
+
+.logo p {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #0b4db8;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* MAIN LAYOUT */
+
+.main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 45px 20px;
+}
+
+.login-layout {
+    width: 100%;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 55px;
+}
+
+/* WELCOME SECTION */
+
+.welcome {
+    padding: 15px;
+}
+
+.welcome-label {
+    display: inline-block;
+    background: #e1edff;
+    color: #0b4db8;
+    padding: 8px 14px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 22px;
+}
+
+.welcome h2 {
+    font-size: clamp(32px, 4vw, 46px);
+    line-height: 1.2;
+    color: #172554;
+    margin-bottom: 20px;
+}
+
+.welcome h2 span {
+    color: #0b4db8;
+}
+
+.welcome-description {
+    color: #64748b;
+    font-size: 16px;
+    line-height: 1.8;
+    max-width: 420px;
+    margin-bottom: 30px;
+}
+
+.benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.benefit {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #374151;
+    font-size: 14px;
+}
+
+.benefit-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    background: #e4edff;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+}
+
+/* LOGIN CARD */
+
+.login-card {
+    background: white;
+    border-radius: 24px;
+    padding: 38px;
+    box-shadow: 0 15px 45px rgba(31, 78, 140, 0.10);
+    border: 1px solid #e8eef7;
+}
+
+.card-icon {
+    width: 58px;
+    height: 58px;
+    background: #e8f0fe;
+    border-radius: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 22px;
+}
+
+.login-card h2 {
+    font-size: 27px;
+    color: #172554;
+    margin-bottom: 9px;
+}
+
+.card-description {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+/* FORM */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 9px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #dbe3f0;
+    border-radius: 11px;
+    outline: none;
+    background: #fbfdff;
+    color: #111827;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.input-wrapper input:focus {
+    border-color: #0b4db8;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(11, 77, 184, 0.10);
+}
+
+.input-wrapper input::placeholder {
+    color: #9ca3af;
+}
+
+.password-input {
+    padding-right: 76px !important;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #0b4db8;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.form-options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: -3px 0 23px;
+}
+
+.forgot-link {
+    border: none;
+    background: none;
+    color: #0b4db8;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* LOGIN BUTTON */
+
+.login-button {
+    width: 100%;
+    padding: 15px;
+    background: #0b4db8;
+    color: white;
+    border: none;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 5px 12px rgba(11, 77, 184, 0.18);
+    transition: 0.2s;
+}
+
+.login-button:hover {
+    background: #083c91;
+    transform: translateY(-1px);
+}
+
+.login-button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+    transform: none;
+}
+
+/* STATUS MESSAGE */
+
+.message {
+    display: none;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.message.error {
+    display: block;
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.message.success {
+    display: block;
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.security-note {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    color: #6b7280;
+    font-size: 12px;
+    margin-top: 23px;
+}
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+    .login-layout {
+        max-width: 460px;
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .welcome {
+        text-align: center;
+        padding: 0;
+    }
+
+    .welcome-label {
+        margin-bottom: 15px;
+    }
+
+    .welcome h2 {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+
+    .welcome-description {
+        margin: 0 auto;
+        font-size: 14px;
+    }
+
+    .benefits {
+        display: none;
+    }
+
+    .login-card {
+        padding: 30px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 14px 18px;
+    }
+
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+    }
+
+    .logo h1 {
+        font-size: 18px;
+    }
+
+    .back-link {
+        font-size: 12px;
+    }
+
+    .main {
+        padding: 30px 16px;
+    }
+
+    .login-card {
+        padding: 25px 20px;
+        border-radius: 19px;
+    }
+
+    .login-card h2 {
+        font-size: 24px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<h1>My BITM Notes</h1>
+<!-- HEADER -->
 
-<input type="email" id="email" placeholder="Email">
-<br><br>
+<header class="header">
+    <div class="logo">
+        <div class="logo-icon">📘</div>
 
-<input type="password" id="password" placeholder="Password">
-<br><br>
+        <div>
+            <h1>My BITM Notes</h1>
+            <p>Your learning space</p>
+        </div>
+    </div>
 
-<button id="loginButton">Login</button>
+    <a href="index.html" class="back-link">← Back to Home</a>
+</header>
 
-<p id="message"></p>
+<!-- MAIN CONTENT -->
+
+<main class="main">
+
+    <div class="login-layout">
+
+        <!-- WELCOME SECTION -->
+
+        <section class="welcome">
+
+            <div class="welcome-label">
+                🎓 YOUR STUDY COMPANION
+            </div>
+
+            <h2>
+                Welcome<br>
+                <span>Back!</span>
+            </h2>
+
+            <p class="welcome-description">
+                Continue your learning journey with My BITM Notes.
+                Access your subjects, study materials, and assignments
+                in one convenient place.
+            </p>
+
+            <div class="benefits">
+
+                <div class="benefit">
+                    <div class="benefit-icon">📚</div>
+                    <span>Access your semester-wise study materials</span>
+                </div>
+
+                <div class="benefit">
+                    <div class="benefit-icon">📝</div>
+                    <span>Keep your notes and assignments organized</span>
+                </div>
+
+                <div class="benefit">
+                    <div class="benefit-icon">💡</div>
+                    <span>Make your study sessions more productive</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- LOGIN FORM -->
+
+        <section class="login-card">
+
+            <div class="card-icon">👋</div>
+
+            <h2>Sign in to your account</h2>
+
+            <p class="card-description">
+                Enter your account details to continue to your notes.
+            </p>
+
+            <form id="loginForm">
+
+                <div class="form-group">
+                    <label for="email">Email address</label>
+
+                    <div class="input-wrapper">
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email"
+                            autocomplete="username"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <div class="input-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            class="password-input"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            id="togglePassword"
+                            aria-label="Show password"
+                        >Show</button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <button
+                        type="button"
+                        class="forgot-link"
+                        id="forgotPassword"
+                    >Forgot password?</button>
+                </div>
+
+                <div
+                    id="message"
+                    class="message"
+                    role="status"
+                    aria-live="polite"
+                ></div>
+
+                <button
+                    type="submit"
+                    class="login-button"
+                    id="loginButton"
+                >Login to My BITM Notes →</button>
+
+            </form>
+
+            <div class="security-note">
+                🔒 Secure sign-in powered by Firebase
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+<footer class="footer">
+    © 2026 My BITM Notes. Made for better learning.
+</footer>
+
+<!-- FIREBASE AUTHENTICATION -->
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 
 import {
     getAuth,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
-
-
 const firebaseConfig = {
-  apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53rUofsTN2M",
-  authDomain: "my-bitm-notes.firebaseapp.com",
-  projectId: "my-bitm-notes",
-  storageBucket: "my-bitm-notes.firebasestorage.app",
-  messagingSenderId: "806626631556",
-  appId: "1:806626631556:web:3e1ff6d9474580fc5e47d1",
-  measurementId: "G-RYR93GQ15R"
+    apiKey: "AIzaSyDi2MagVoXj6STUHRg8tCAp53rUofsTN2M",
+    authDomain: "my-bitm-notes.firebaseapp.com",
+    projectId: "my-bitm-notes",
+    storageBucket: "my-bitm-notes.firebasestorage.app",
+    messagingSenderId: "806626631556",
+    appId: "1:806626631556:web:3e1ff6d9474580fc5e47d1",
+    measurementId: "G-RYR93GQ15R"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-document.getElementById("loginButton").addEventListener("click", async function(){
+const loginForm = document.getElementById("loginForm");
+const loginButton = document.getElementById("loginButton");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const message = document.getElementById("message");
+const togglePassword = document.getElementById("togglePassword");
+const forgotPassword = document.getElementById("forgotPassword");
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+function showMessage(text, type = "error") {
+    message.textContent = text;
+    message.className = "message " + type;
+}
 
-    try {
+function clearMessage() {
+    message.textContent = "";
+    message.className = "message";
+}
 
-        await signInWithEmailAndPassword(auth, email, password);
+/* SHOW / HIDE PASSWORD */
 
-        window.location.href = "index.html";
+togglePassword.addEventListener("click", function () {
+    const showing = passwordInput.type === "text";
 
-    } catch (error) {
+    passwordInput.type = showing ? "password" : "text";
+    togglePassword.textContent = showing ? "Show" : "Hide";
 
-        document.getElementById("message").innerText =
-        "Invalid email or password.";
+    togglePassword.setAttribute(
+        "aria-label",
+        showing ? "Show password" : "Hide password"
+    );
+});
 
+/* LOGIN */
+
+loginForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    clearMessage();
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+        showMessage("Please enter your email and password.");
+        return;
     }
 
+    loginButton.disabled = true;
+    loginButton.textContent = "Signing in...";
+
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+
+        showMessage("Login successful! Opening your notes...", "success");
+
+        window.location.replace("index.html");
+
+    } catch (error) {
+        console.error("Login error:", error.code);
+
+        if (
+            error.code === "auth/invalid-credential" ||
+            error.code === "auth/wrong-password" ||
+            error.code === "auth/user-not-found"
+        ) {
+            showMessage("Invalid email or password. Please try again.");
+        } else if (error.code === "auth/invalid-email") {
+            showMessage("Please enter a valid email address.");
+        } else if (error.code === "auth/too-many-requests") {
+            showMessage("Too many attempts. Please wait a while and try again.");
+        } else if (
+            error.code === "auth/network-request-failed"
+        ) {
+            showMessage("Network error. Check your internet connection.");
+        } else if (
+            error.code === "auth/user-disabled"
+        ) {
+            showMessage("This account has been disabled. Please contact the administrator.");
+        } else {
+            showMessage("Unable to sign in right now. Please try again.");
+        }
+
+        loginButton.disabled = false;
+        loginButton.textContent = "Login to My BITM Notes →";
+    }
+});
+
+/* PASSWORD RESET */
+
+forgotPassword.addEventListener("click", async function () {
+    clearMessage();
+
+    const email = emailInput.value.trim();
+
+    if (!email) {
+        showMessage("Enter your email address first, then click Forgot password.");
+        emailInput.focus();
+        return;
+    }
+
+    forgotPassword.disabled = true;
+    forgotPassword.textContent = "Sending...";
+
+    try {
+        await sendPasswordResetEmail(auth, email);
+
+        showMessage(
+            "If an account exists for this email, a password reset email has been sent. Check your inbox and spam folder.",
+            "success"
+        );
+
+    } catch (error) {
+        console.error("Password reset error:", error.code);
+
+        if (error.code === "auth/invalid-email") {
+            showMessage("Please enter a valid email address.");
+        } else if (error.code === "auth/too-many-requests") {
+            showMessage("Too many requests. Please wait and try again later.");
+        } else {
+            showMessage("Unable to send the reset email. Please try again later.");
+        }
+    } finally {
+        forgotPassword.disabled = false;
+        forgotPassword.textContent = "Forgot password?";
+    }
 });
 
 </script>
 
 </body>
 </html>
+```
